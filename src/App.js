@@ -1,14 +1,14 @@
-import logo from './logo.svg';
 import './App.css';
 import Registration from './Components/Registration';
 import Header from './Components/Header';
-import UserPool from './Components/UserPool';
 import Login from './Components/Login';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { AccountSettings } from './Components/AccountSettings';
 
 function App() {
   return (
-    <Router>
+    <AccountSettings>
+      <Router>
       <div className="App">
       <header className="App-header">
         <Header />
@@ -25,6 +25,7 @@ function App() {
       </div>
     </div>
     </Router>
+    </AccountSettings>
   );
 }
 
