@@ -22,7 +22,6 @@ const Login = () => {
 
   return (
     <div>
-      <Status />
       <form onSubmit={onSubmit}>
         <label htmlFor = "email"> Email </label>
           <input value = {email} onChange = {(event) => setEmail(event.target.value)} />
