@@ -4,6 +4,7 @@ import Header from './Components/Header';
 import Login from './Components/Login';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { AccountSettings } from './Components/AccountSettings';
+import Status from './Components/Status';
 
 function App() {
   return (

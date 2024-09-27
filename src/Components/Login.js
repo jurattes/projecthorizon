@@ -1,5 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { AccountSettingsContext } from './AccountSettings';
+import Status from './Status';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -21,6 +22,7 @@ const Login = () => {
 
   return (
     <div>
+      <Status />
       <form onSubmit={onSubmit}>
         <label htmlFor = "email"> Email </label>
           <input value = {email} onChange = {(event) => setEmail(event.target.value)} />
