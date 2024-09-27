@@ -25,13 +25,9 @@ function Header() {
         <ul>
           <li><a href="/">Home</a></li>
           {!loggedIn && (
-                <li><a href="/login">Login</a></li>
-            )}
-          {!loggedIn && (
-                <li><a href="/register">Register</a></li>
-            )}
-          {loggedIn && (
-                <li><a href="/settings"><img src={settings} alt="Settings" /></a></li>
+                <><li><a href="/login">Login</a></li><li><a href="/register">Register</a></li></>
+            )} {loggedIn && (
+              <li><a href="/settings"><img src={settings} alt="Settings" /></a></li>
             )}
         </ul>
       </nav>
