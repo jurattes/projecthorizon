@@ -2,6 +2,7 @@ import './App.css';
 import Registration from './Components/Registration';
 import Header from './Components/Header';
 import Login from './Components/Login';
+import Settings from './Components/Settings';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { AccountSettings } from './Components/AccountSettings';
 import Status from './Components/Status';
@@ -18,6 +19,9 @@ function App() {
       <Switch>
         <Route path = "/register">
           <Registration />
+        </Route>
+        <Route path = "/settings">
+          <Settings />
         </Route>
         <Route path = "/login">
           <Login />
