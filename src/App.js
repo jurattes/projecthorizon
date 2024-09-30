@@ -3,6 +3,7 @@ import Registration from './Components/Registration';
 import Header from './Components/Header';
 import Login from './Components/Login';
 import Settings from './Components/Settings';
+import ForgotPassword from './Components/ForgotPassword';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { AccountSettings } from './Components/AccountSettings';
 import Status from './Components/Status';
@@ -13,7 +14,7 @@ function App() {
       <Router>
       <div className="App">
       <header className="App-header">
-        <Header />
+        
       </header>
       <div className = "content">
       <Switch>
@@ -25,6 +26,9 @@ function App() {
         </Route>
         <Route path = "/login">
           <Login />
+        </Route>
+        <Route path = "/forgotpassword">
+          <ForgotPassword />
         </Route>
       </Switch>
       </div>

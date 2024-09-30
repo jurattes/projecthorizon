@@ -76,7 +76,7 @@ const Login = () => {
         </div>
         <div class = "checkbox mb-3">
           <label>
-            <p><a href = "#">Forgot Password?</a> / <a href = "#">Forgot Email?</a></p>
+            <p><a href = "/forgotpassword">Forgot Password?</a> / <a href = "#">Forgot Email?</a></p>
             <input type="checkbox" value="remember-me"/> Remember me
           </label>
         </div>
