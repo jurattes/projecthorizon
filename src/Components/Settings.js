@@ -2,9 +2,7 @@ import React, { useEffect, useContext, useState } from 'react';
 import { AccountSettingsContext } from './AccountSettings';
 import ChangePassword from './ChangePassword';
 import ChangeEmail from './ChangeEmail';
-import Settings from './Settings';
 import { Redirect } from 'react-router-dom/cjs/react-router-dom.min';
-import Status from './Status';
 
 export default () => {
     const { getSession, logout } = useContext(AccountSettingsContext);
@@ -18,17 +16,14 @@ export default () => {
             })
             .catch((err) => {
                 console.error(err);
+                <Redirect to="/login" />
                 setLoggedIn(false);
             });
     }, []);
 
-    if (!getSession) {
-        return <Redirect to="/login" />;    
-    }
-
     return (
         <div>
-            {getSession && (
+            {loggedIn && (
                 <div>
                     <h1>Settings</h1>
                     <ChangePassword />

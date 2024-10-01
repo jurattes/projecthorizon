@@ -3,6 +3,7 @@ import { useHistory } from 'react-router-dom';  // Assuming you're using react-r
 import UserPool from './UserPool.js';
 import logo from './assets/logo.png';
 import './styles.css';  // Assuming you have a CSS file for the fade-out class
+import { Redirect } from 'react-router-dom/cjs/react-router-dom.min';
 
 const Registration = () => {
   const [email, setEmail] = useState('');

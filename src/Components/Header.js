@@ -31,7 +31,9 @@ function Header() {
         <ul>
           <li><a href="/">Home</a></li>
           {loggedIn ? (
+            <>
             <li><a href="/settings"><img src={settings} alt="Settings" /></a></li>
+            </>
               ) : (
           <>
             <li><a href="/login">Login</a></li>

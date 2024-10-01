@@ -8,6 +8,7 @@ import './styles.css';
 import hide from './assets/eye-slash.svg';
 import show from './assets/eye.svg';
 import logo from './assets/logo.png';
+import { Redirect } from 'react-router-dom/cjs/react-router-dom.min';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -46,6 +47,7 @@ const Login = () => {
         setFailedAttempts(0);
         setTimeoutMessage('');
         localStorage.removeItem('lockoutTime');
+        <Redirect to="/" />
 
         if (rememberMe) {
           localStorage.setItem('userData', JSON.stringify(data));

@@ -20,18 +20,10 @@ function App() {
       </header>
       <div className = "content">
       <Switch>
-        <Route path = "/register">
-          <Registration />
-        </Route>
-        <Route path = "/settings">
-          <Settings />
-        </Route>
-        <Route path = "/login">
-          <Login />
-        </Route>
-        <Route path = "/forgotpassword">
-          <ForgotPassword />
-        </Route>
+        <Route path = "/register"> <Registration /> </Route>
+        <Route path = "/settings"> <Settings /> </Route>
+        <Route path = "/login"> <Login /> </Route>
+        <Route path = "/forgotpassword"> <ForgotPassword /> </Route>
       </Switch>
       </div>
     </div>
