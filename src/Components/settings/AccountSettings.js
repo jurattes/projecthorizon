@@ -67,6 +67,7 @@ const AccountSettings = (props) => {
             user.signOut();
             localStorage.removeItem('userData');
             sessionStorage.removeItem('userData');
+            alert('Logged out successfully!');
             setFadeOut(true);
         }
     };

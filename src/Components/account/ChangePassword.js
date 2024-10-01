@@ -18,7 +18,7 @@ export default () => {
                     return;
                 }
                 console.log(data);
-                history.push('/home');
+                history.push('/settings');
             })
         });
     };

@@ -64,10 +64,12 @@ const ForgotPassword = () => {
     cognitoUser.confirmPassword(code, password, {
       onSuccess: (data) => {
         console.log(data);
+        alert('Password reset successful. Please login with your new password.');
         history.push('/home');
       },
       onFailure: (err) => {
-        console.log('Error confirming password reset: ', err);
+        console.log(err);
+        alert('Error resetting password. Please try again.');
       },
     });
   };

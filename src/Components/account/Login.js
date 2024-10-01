@@ -58,6 +58,7 @@ const Login = () => {
         setFailedAttempts(0);
         setTimeoutMessage('');
         localStorage.removeItem('lockoutTime');
+        alert('Logged in succesfully!');
 
         if (rememberMe) {
           localStorage.setItem('userData', JSON.stringify(data));

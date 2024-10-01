@@ -20,7 +20,7 @@ export default () => {
                             console.error(err);
                         } else {
                             console.log(results);
-                            history.push('/home');
+                            history.push('/settings');
                         }
                 });
             });
