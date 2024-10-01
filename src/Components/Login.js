@@ -53,7 +53,6 @@ const Login = () => {
         } else {
           sessionStorage.setItem('userData', JSON.stringify(data));
         }
-        <Redirect to="/home" />
       })
       
       .catch((err) => {

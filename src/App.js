@@ -11,9 +11,9 @@ import { AuthProvider } from './Components/AuthContext';
 
 function App() {
   return (
+    <Router>
     <AccountSettings>
       <AuthProvider>
-      <Router>
       <div className="App">
       <header className="App-header">
         
@@ -27,9 +27,9 @@ function App() {
       </Switch>
       </div>
     </div>
-    </Router>
       </AuthProvider>
     </AccountSettings>
+    </Router>
   );
 }
 

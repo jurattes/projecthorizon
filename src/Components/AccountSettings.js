@@ -1,11 +1,15 @@
-import React, { createContext } from 'react';
+import React, { useState, createContext, useEffect } from 'react';
 import { CognitoUser, AuthenticationDetails } from 'amazon-cognito-identity-js';
 import Pool from './UserPool.js';
 import { useHistory } from 'react-router-dom';
+import './styles.css';
 
 const AccountSettingsContext = createContext();
 
 const AccountSettings = (props) => {
+    const [fadeOut, setFadeOut] = useState(false);  // For fade-out effect
+    const history = useHistory();  // For redirection
+
     const getSession = async () => {
         return await new Promise((resolve, reject) => {
             const user = Pool.getCurrentUser();
@@ -57,19 +61,30 @@ const AccountSettings = (props) => {
         })
     };
 
-    const history = useHistory();
-
     const logout = () => {
         const user = Pool.getCurrentUser();
         if (user) {
             user.signOut();
+            localStorage.removeItem('userData');
+            sessionStorage.removeItem('userData');
+            setFadeOut(true);
         }
     };
 
+    useEffect(() => {
+        if (fadeOut) {
+            setTimeout(() => {
+                history.push('/HOME');  // Redirect to /HOME after fade-out
+            }, 1000);  // Adjust time for fade-out duration
+        }
+    }, [fadeOut, history]);
+
     return (
-        <AccountSettingsContext.Provider value = {{ authenticate, getSession, logout }}>
-            {props.children}
-        </AccountSettingsContext.Provider>
+        <div className={`a ${fadeOut ? 'fade-out' : ''}`}>
+            <AccountSettingsContext.Provider value={{ getSession, authenticate, logout }}>
+                {props.children}
+            </AccountSettingsContext.Provider>
+        </div>
     );
 };
 
