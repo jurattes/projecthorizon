@@ -47,13 +47,13 @@ const Login = () => {
         setFailedAttempts(0);
         setTimeoutMessage('');
         localStorage.removeItem('lockoutTime');
-        <Redirect to="/home" />
 
         if (rememberMe) {
           localStorage.setItem('userData', JSON.stringify(data));
         } else {
           sessionStorage.setItem('userData', JSON.stringify(data));
         }
+        <Redirect to="/home" />
       })
       
       .catch((err) => {

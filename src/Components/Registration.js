@@ -149,7 +149,8 @@ const Registration = () => {
           {confirmPasswordError && <div style={{ color: 'red', fontSize: '12px', float: 'left', marginTop: '-20px', paddingBottom: '25px' }}>{confirmPasswordError}</div>}
           {confirmError && <div style={{ color: 'red', fontSize: '12px', float: 'left', marginTop: '-20px', paddingBottom: '25px' }}>{confirmError}</div>}
         </div>
-        <button type="submit" className="btn btn-primary">Sign Up</button>
+        <button style = {{marginBottom: '10px'}} type="submit" className="btn btn-primary">Sign Up</button>
+        <a href="/login">Already have an account? Login</a>
       </form>
     </div>
   );

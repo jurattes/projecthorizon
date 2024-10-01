@@ -36,7 +36,7 @@ const AccountSettings = (props) => {
     };
 
     const authenticate = async (Username, Password) => {
-        await new Promise((resolve, reject) => {
+        return await new Promise((resolve, reject) => {
             const user = new CognitoUser({ Username, Pool });
             const authDetails = new AuthenticationDetails({ Username, Password });
 
@@ -63,9 +63,6 @@ const AccountSettings = (props) => {
         const user = Pool.getCurrentUser();
         if (user) {
             user.signOut();
-            localStorage.removeItem('userData');
-            sessionStorage.removeItem('userData');
-            history.push('/home');
         }
     };
 
