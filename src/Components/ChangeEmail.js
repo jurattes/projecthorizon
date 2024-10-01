@@ -1,12 +1,14 @@
 import React, { useState, useContext } from 'react';
 import { CognitoUserAttribute } from 'amazon-cognito-identity-js';
 import { AccountSettingsContext } from './AccountSettings';
-import { Redirect } from 'react-router-dom/cjs/react-router-dom.min';
+import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
 
 export default () => {
     const [newEmail, setNewEmail] = useState('');
     const [password, setPassword] = useState('');
     const { getSession, authenticate } = useContext(AccountSettingsContext);
+    const history = useHistory();
+
     const onSubmit = (event) => {
         event.preventDefault();
 
@@ -18,7 +20,7 @@ export default () => {
                             console.error(err);
                         } else {
                             console.log(results);
-                            <Redirect to="/home" />
+                            history.push('/home');
                         }
                 });
             });

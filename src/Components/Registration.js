@@ -3,7 +3,8 @@ import { useHistory } from 'react-router-dom';  // Assuming you're using react-r
 import UserPool from './UserPool.js';
 import logo from './assets/logo.png';
 import './styles.css';  // Assuming you have a CSS file for the fade-out class
-import { Redirect } from 'react-router-dom/cjs/react-router-dom.min';
+import hide from './assets/eye-slash.svg';
+import show from './assets/eye.svg';
 
 const Registration = () => {
   const [email, setEmail] = useState('');
@@ -15,6 +16,7 @@ const Registration = () => {
   const [confirmError, setConfirmError] = useState('');
   const [fadeOut, setFadeOut] = useState(false);  // For fade-out effect
   const history = useHistory();  // For redirection
+  
 
   // Regex for password validation
   const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
@@ -26,6 +28,38 @@ const Registration = () => {
       }, 1000);  // Adjust time for fade-out duration
     }
   }, [fadeOut, history]);
+  
+  useEffect(() => {
+    const pwrd = document.getElementById('pw');
+    const toggleVisibility = document.getElementById('ToggleVisibility');
+    const img = document.getElementById('img1');
+
+    toggleVisibility.addEventListener('change', function () {
+      if (this.checked) {
+        pwrd.type = 'text';
+        img.setAttribute('src', show);
+      } else {
+        pwrd.type = 'password';
+        img.setAttribute('src', hide);
+      }
+    });
+  }, []);
+
+  useEffect(() => {
+    const confirmPwrd = document.getElementById('confirmPw');
+    const toggleVisibility1 = document.getElementById('ToggleVisibility1');
+    const img2 = document.getElementById('img2');
+
+    toggleVisibility1.addEventListener('change', function () {
+      if (this.checked) {
+        confirmPwrd.type = 'text';
+        img2.setAttribute('src', show);
+      } else {
+        confirmPwrd.type = 'password';
+        img2.setAttribute('src', hide);
+      }
+    });
+  }, []);
 
   const onSubmit = (event) => {
     event.preventDefault();
@@ -86,22 +120,32 @@ const Registration = () => {
         </div>
         <div className="input">
           <input
+            id = "pw"
             type="password"
             value={password}
             className="form-control"
             placeholder="Your Password"
             onChange={(event) => setPassword(event.target.value)}
           />
+          <label className="togglePassword">
+            <input type="checkbox" id="ToggleVisibility" />
+            <img id="img1" src={hide} alt="Show Password" />
+          </label>
           {passwordError && <div style={{ color: 'red', fontSize: '12px', float: 'left', marginTop: '-20px', paddingBottom: '25px' }}>{passwordError}</div>}
         </div>
         <div className="input">
           <input
+            id = "confirmPw"
             type="password"
             value={confirmPassword}
             className="form-control"
             placeholder="Confirm Password"
             onChange={(event) => setConfirmPassword(event.target.value)}
           />
+          <label className="togglePassword">
+            <input type="checkbox" id="ToggleVisibility1" />
+            <img id="img2" src={hide} alt="Show Password" />
+          </label>
           {confirmPasswordError && <div style={{ color: 'red', fontSize: '12px', float: 'left', marginTop: '-20px', paddingBottom: '25px' }}>{confirmPasswordError}</div>}
           {confirmError && <div style={{ color: 'red', fontSize: '12px', float: 'left', marginTop: '-20px', paddingBottom: '25px' }}>{confirmError}</div>}
         </div>

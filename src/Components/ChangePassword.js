@@ -1,11 +1,12 @@
 import React, { useState, useContext } from 'react';
 import { AccountSettingsContext } from './AccountSettings';
-import { Redirect } from 'react-router-dom/cjs/react-router-dom.min';
+import { useHistory } from 'react-router-dom';
 
 export default () => {
     const [password, setPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const { getSession } = useContext(AccountSettingsContext);
+    const history = useHistory();
 
     const onSubmit = (event) => {
         event.preventDefault();
@@ -14,9 +15,10 @@ export default () => {
             user.changePassword(password, newPassword, (err, data) => {
                 if (err) {
                     console.error(err);
+                    return;
                 }
                 console.log(data);
-                <Redirect to="/home" />
+                history.push('/home');
             })
         });
     };

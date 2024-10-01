@@ -1,7 +1,7 @@
 import React, { createContext } from 'react';
 import { CognitoUser, AuthenticationDetails } from 'amazon-cognito-identity-js';
 import Pool from './UserPool.js';
-import { Redirect } from 'react-router-dom/cjs/react-router-dom.min';
+import { useHistory } from 'react-router-dom';
 
 const AccountSettingsContext = createContext();
 
@@ -57,13 +57,15 @@ const AccountSettings = (props) => {
         })
     };
 
+    const history = useHistory();
+
     const logout = () => {
         const user = Pool.getCurrentUser();
         if (user) {
             user.signOut();
             localStorage.removeItem('userData');
             sessionStorage.removeItem('userData');
-            <Redirect to="/home" />
+            history.push('/home');
         }
     };
 
