@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { CognitoUser, CognitoUserPool } from 'amazon-cognito-identity-js';
-import UserPool  from './UserPool';
+import { withRouter } from 'react-router-dom'; // Import withRouter
+import UserPool from './UserPool';
 
-export default class ForgotPassword extends Component { 
+class ForgotPassword extends Component {
     constructor(props) {
         super(props);
         this.state = {  
@@ -18,6 +19,14 @@ export default class ForgotPassword extends Component {
         };
 
         this.userPool = new CognitoUserPool(this.poolData);
+    }
+
+    componentDidMount() {
+        // Check if the user is logged in and redirect
+        const storedUserData = localStorage.getItem('userData') || sessionStorage.getItem('userData');
+        if (storedUserData) {
+            this.props.history.push('/home'); // Redirect to home if user is logged in
+        }
     }
 
     handleForgotPassword = (event) => {
@@ -42,7 +51,7 @@ export default class ForgotPassword extends Component {
                 console.log('Error sending code: ', err);
             },
             inputVerificationCode: () => {
-                this.setState({phase : 2});
+                this.setState({ phase: 2 });
             }
         });
     }
@@ -74,51 +83,54 @@ export default class ForgotPassword extends Component {
     render() {
         const { email, code, password, phase } = this.state;
         return (
-            <div class = "container">
+            <div className="container">
                 {phase === 1 ? (
                     <form onSubmit={this.handleForgotPassword}>
                         <div>
                             <h1> Forgot Password </h1>
                             <p> Enter your email and we will send you a code to reset your password. </p>
                             <input
-                                class = "form-control"
+                                className="form-control"
                                 name="email"
                                 type="email"
-                                placeholder = "Enter your email"
+                                placeholder="Enter your email"
                                 value={email}
                                 onChange={(event) => this.setState({ email: event.target.value })}
                             />
-                            <button type="submit" class = "btn btn-primary">Send Reset Code</button>
+                            <button type="submit" className="btn btn-primary">Send Reset Code</button>
                         </div>
                     </form>
-            ) : (
-                <div>
-                    <form onSubmit={this.handleConfirmForgotPassword}>
-                        <div>
-                            <h1> Reset Password </h1>
-                            <p> Enter your code and new password. </p>
-                            <input
-                                class = "form-control"
-                                name="code"
-                                type="text"
-                                placeholder = "Enter code"
-                                value={code}
-                                onChange={(event) => this.setState({ code: event.target.value })}
-                            />
-                            <input
-                                class = "form-control"
-                                name="password"
-                                type="password"
-                                placeholder = "Enter new password"
-                                value={password}
-                                onChange={(event) => this.setState({ password: event.target.value })}
-                            />
-                            <button type="submit" class = "btn btn-primary">Reset Password</button>
-                        </div>
-                    </form>
-                </div>
-            )}
+                ) : (
+                    <div>
+                        <form onSubmit={this.handleConfirmForgotPassword}>
+                            <div>
+                                <h1> Reset Password </h1>
+                                <p> Enter your code and new password. </p>
+                                <input
+                                    className="form-control"
+                                    name="code"
+                                    type="text"
+                                    placeholder="Enter code"
+                                    value={code}
+                                    onChange={(event) => this.setState({ code: event.target.value })}
+                                />
+                                <input
+                                    className="form-control"
+                                    name="password"
+                                    type="password"
+                                    placeholder="Enter new password"
+                                    value={password}
+                                    onChange={(event) => this.setState({ password: event.target.value })}
+                                />
+                                <button type="submit" className="btn btn-primary">Reset Password</button>
+                            </div>
+                        </form>
+                    </div>
+                )}
             </div>
         );
-    };
+    }
 }
+
+// Wrap the component with withRouter to access history
+export default withRouter(ForgotPassword);

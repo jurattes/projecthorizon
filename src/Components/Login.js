@@ -108,13 +108,13 @@ const Login = () => {
         return () => clearInterval(interval);
       }
     }
+  }, []);
 
     // Sends user to home page if already logged in
     const storedUserData = localStorage.getItem('userData') || sessionStorage.getItem('userData');
     if (storedUserData) {
       history.push('/home');
     }
-  }, []);
 
   useEffect(() => {
     if (failedAttempts >= 3) {

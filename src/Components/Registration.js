@@ -69,7 +69,6 @@ const Registration = () => {
     });
   }, []);
 
-  // Handle form submission
   const onSubmit = (event) => {
     event.preventDefault();
 
@@ -97,7 +96,6 @@ const Registration = () => {
       return;
     }
 
-    // Sign up user
     UserPool.signUp(email, password, [], null, (err, data) => {
       if (err) {
         console.log(err);
@@ -105,7 +103,7 @@ const Registration = () => {
         return;
       }
       console.log(data);
-      setFadeOut(true); 
+      setFadeOut(true);  // Trigger fade-out effect
     });
   };
 
