@@ -60,7 +60,7 @@ const Login = () => {
     <div class = "container">
       <form onSubmit={onSubmit}>
       <div class = "text center mb-4">
-        <img src = {logo} alt = "logo"/>
+        <a href = "/">  <img src = {logo} alt = ""/> </a>
         <h1 class = "h2 mb-3 font-weight-normal"> Login </h1>
         <p> Please login to your account using your e-mail and password. </p>
       </div>
@@ -76,7 +76,8 @@ const Login = () => {
         </div>
         <div class = "checkbox mb-3">
           <label>
-            <p><a href = "/forgotpassword">Forgot Password?</a> / <a href = "#">Forgot Email?</a></p>
+            <p><a href = "/register">Not a Member?</a></p>
+            <p><a href = "/forgotpassword">Forgot Password?</a></p>
             <input type="checkbox" value="remember-me"/> Remember me
           </label>
         </div>

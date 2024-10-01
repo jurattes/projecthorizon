@@ -18,13 +18,15 @@ const Registration = () => {
   };
 
   return (
-    <div>
+    <div class = "container">
       <form onSubmit={onSubmit}>
-        <label htmlFor = "email"> Email </label>
-          <input value = {email} onChange = {(event) => setEmail(event.target.value)} />
-        <label htmlFor = "password"> Password </label>
-          <input value = {password} onChange = {(event) => setPassword(event.target.value)} />
-        <button type="submit">Sign Up</button>
+          <div class = "input">
+            <input value = {email} class = "form-control" placeholder = "Email Address" onChange = {(event) => setEmail(event.target.value)} />
+          </div>
+          <div class = "input">
+            <input value = {password} class = "form-control"placeholder = "Password" onChange = {(event) => setPassword(event.target.value)} />
+          </div>
+        <button type="submit" class = "btn btn-primary">Sign Up</button>
       </form>
     </div>
   );
