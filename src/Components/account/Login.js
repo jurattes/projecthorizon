@@ -18,10 +18,15 @@ const Login = () => {
   const [timeLeft, setTimeLeft] = useState(0);
   const [rememberMe, setRememberMe] = useState(false);
   const [fadeOut, setFadeOut] = useState(false); 
+  const [emailError, setEmailError] = useState('');
+  const [confirmError, setConfirmError] = useState('');
   const history = useHistory();
 
   const { authenticate } = useContext(AccountSettingsContext);
   const lockTime = 5 * 60 * 1000;
+
+  // Regex for password validation
+  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
 
 
   // Redirect to /HOME after fade-out animation
@@ -42,6 +47,10 @@ const Login = () => {
       return;
     }
 
+    // Clear previous error messages
+    setEmailError('');
+    setConfirmError('');
+
     authenticate(email, password)
       .then((data) => {
         console.log(data);
@@ -59,7 +68,9 @@ const Login = () => {
       
       .catch((err) => {
         console.error(err);
+        setConfirmError(err.message);
         setFailedAttempts((prevAttempts) => prevAttempts + 1);
+        return;
       });
   };
 
@@ -166,6 +177,7 @@ const Login = () => {
             required
             disabled={isLocked}
           />
+          {emailError && <div style={{ color: 'red', fontSize: '12px', float: 'left', marginTop: '-20px', paddingBottom: '25px' }}>{emailError}</div>}
         </div>
         <div className="input">
           <input
@@ -182,6 +194,7 @@ const Login = () => {
             <input type="checkbox" id="ToggleVisibility" />
             <img id="img1" src={hide} alt="Show Password" />
           </label>
+          {confirmError && <div style={{ color: 'red', fontSize: '12px', float: 'left', marginTop: '-20px', paddingBottom: '25px' }}>{confirmError}</div>}
         </div>
         <div className="checkbox mb-3">
           <label>
