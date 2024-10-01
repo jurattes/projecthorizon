@@ -1,7 +1,7 @@
 import React, { useEffect, useContext, useState } from 'react';
 import { AccountSettingsContext } from './AccountSettings';
-import ChangePassword from './ChangePassword';
-import ChangeEmail from './ChangeEmail';
+import ChangePassword from '../account/ChangePassword';
+import ChangeEmail from '../account/ChangeEmail';
 import { Redirect } from 'react-router-dom/cjs/react-router-dom.min';
 import Status from './Status';
 

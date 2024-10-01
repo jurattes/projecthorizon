@@ -1,13 +1,12 @@
 import './App.css';
-import Registration from './Components/Registration';
+import Registration from './Components/account/Registration';
 import Header from './Components/Header';
-import Login from './Components/Login';
-import Settings from './Components/Settings';
-import ForgotPassword from './Components/ForgotPassword';
+import Login from './Components/account/Login';
+import Settings from './Components/settings/Settings';
+import ForgotPassword from './Components/account/ForgotPassword';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import { AccountSettings } from './Components/AccountSettings';
-import Status from './Components/Status';
-import { AuthProvider } from './Components/AuthContext';
+import { AccountSettings } from './Components/settings/AccountSettings';
+import { AuthProvider } from './Components/settings/AuthContext';
 
 function App() {
   return (

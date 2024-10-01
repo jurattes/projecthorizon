@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { CognitoUser, CognitoUserPool } from 'amazon-cognito-identity-js';
-import { withRouter } from 'react-router-dom'; // Import withRouter
-import UserPool from './UserPool';
+import UserPool from '../settings/UserPool';
 
 class ForgotPassword extends Component {
     constructor(props) {
@@ -133,4 +132,4 @@ class ForgotPassword extends Component {
 }
 
 // Wrap the component with withRouter to access history
-export default withRouter(ForgotPassword);
+export default ForgotPassword;

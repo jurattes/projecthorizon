@@ -2,7 +2,7 @@ import React, { useState, createContext, useEffect } from 'react';
 import { CognitoUser, AuthenticationDetails } from 'amazon-cognito-identity-js';
 import Pool from './UserPool.js';
 import { useHistory } from 'react-router-dom';
-import './styles.css';
+import '../css/fade.css';
 
 const AccountSettingsContext = createContext();
 

@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { CognitoUserAttribute } from 'amazon-cognito-identity-js';
-import { AccountSettingsContext } from './AccountSettings';
+import { AccountSettingsContext } from '../settings/AccountSettings';
 import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
 
 export default () => {

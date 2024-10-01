@@ -1,13 +1,13 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { AccountSettingsContext } from './AccountSettings';
+import { AccountSettingsContext } from '../settings/AccountSettings';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min';
-import './css/login.css';
+import '../css/login.css';
 import { useHistory } from 'react-router-dom';
-import './styles.css';
-import hide from './assets/eye-slash.svg';
-import show from './assets/eye.svg';
-import logo from './assets/logo.png';
+import '../css/fade.css';
+import hide from '../assets/eye-slash.svg';
+import show from '../assets/eye.svg';
+import logo from '../assets/logo.png';
 
 const Login = () => {
   const [email, setEmail] = useState('');

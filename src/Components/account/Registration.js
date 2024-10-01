@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { useHistory } from 'react-router-dom';  // Assuming you're using react-router for navigation
-import UserPool from './UserPool.js';
-import logo from './assets/logo.png';
-import './styles.css';  // Assuming you have a CSS file for the fade-out class
-import hide from './assets/eye-slash.svg';
-import show from './assets/eye.svg';
+import { useHistory } from 'react-router-dom';
+import UserPool from '../settings/UserPool.js';
+import logo from '../assets/logo.png';
+import '../css/fade.css';
+import hide from '../assets/eye-slash.svg';
+import show from '../assets/eye.svg';
 
 const Registration = () => {
   const [email, setEmail] = useState('');

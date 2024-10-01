@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { AccountSettingsContext } from './AccountSettings';
+import { AccountSettingsContext } from '../settings/AccountSettings';
 import { useHistory } from 'react-router-dom';
 
 export default () => {

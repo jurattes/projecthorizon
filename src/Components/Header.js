@@ -1,7 +1,7 @@
-import './Header.css';
+import './css/Header.css';
 import settings from './assets/settings.svg';
 import React, { useEffect, useContext, useState } from 'react';
-import { AccountSettingsContext } from './AccountSettings';
+import { AccountSettingsContext } from './settings/AccountSettings';
 import { useLocation } from 'react-router-dom';
 
 function Header() {
