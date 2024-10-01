@@ -16,6 +16,12 @@ const Registration = () => {
   const [confirmError, setConfirmError] = useState('');
   const [fadeOut, setFadeOut] = useState(false);  // For fade-out effect
   const history = useHistory();  // For redirection
+
+  // Sends user to home page if already logged in
+  const storedUserData = localStorage.getItem('userData') || sessionStorage.getItem('userData');
+    if (storedUserData) {
+      history.push('/home');
+    }
   
 
   // Regex for password validation
@@ -29,6 +35,7 @@ const Registration = () => {
     }
   }, [fadeOut, history]);
   
+  // Password visibility (password)
   useEffect(() => {
     const pwrd = document.getElementById('pw');
     const toggleVisibility = document.getElementById('ToggleVisibility');
@@ -45,6 +52,7 @@ const Registration = () => {
     });
   }, []);
 
+  // Password visibility (confirm password)
   useEffect(() => {
     const confirmPwrd = document.getElementById('confirmPw');
     const toggleVisibility1 = document.getElementById('ToggleVisibility1');
@@ -61,6 +69,7 @@ const Registration = () => {
     });
   }, []);
 
+  // Handle form submission
   const onSubmit = (event) => {
     event.preventDefault();
 
@@ -88,6 +97,7 @@ const Registration = () => {
       return;
     }
 
+    // Sign up user
     UserPool.signUp(email, password, [], null, (err, data) => {
       if (err) {
         console.log(err);
@@ -95,7 +105,7 @@ const Registration = () => {
         return;
       }
       console.log(data);
-      setFadeOut(true);  // Trigger fade-out effect
+      setFadeOut(true); 
     });
   };
 

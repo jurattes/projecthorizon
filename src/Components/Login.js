@@ -109,7 +109,7 @@ const Login = () => {
       }
     }
 
-    // Logs the user in if they're already logged in
+    // Sends user to home page if already logged in
     const storedUserData = localStorage.getItem('userData') || sessionStorage.getItem('userData');
     if (storedUserData) {
       history.push('/home');
