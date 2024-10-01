@@ -1,6 +1,7 @@
 import React, { createContext } from 'react';
 import { CognitoUser, AuthenticationDetails } from 'amazon-cognito-identity-js';
 import Pool from './UserPool.js';
+import { Redirect } from 'react-router-dom/cjs/react-router-dom.min';
 
 const AccountSettingsContext = createContext();
 
@@ -25,7 +26,7 @@ const AccountSettings = (props) => {
                                 resolve(results);
                             });
                         })
-                        resolve({ user, session, attributes });
+                        resolve({ user, ...session, ...attributes });
                     }
         });
             } else {
@@ -35,7 +36,7 @@ const AccountSettings = (props) => {
     };
 
     const authenticate = async (Username, Password) => {
-        return await new Promise((resolve, reject) => {
+        await new Promise((resolve, reject) => {
             const user = new CognitoUser({ Username, Pool });
             const authDetails = new AuthenticationDetails({ Username, Password });
 
@@ -62,6 +63,7 @@ const AccountSettings = (props) => {
             user.signOut();
             localStorage.removeItem('userData');
             sessionStorage.removeItem('userData');
+            <Redirect to="/home" />
         }
     };
 

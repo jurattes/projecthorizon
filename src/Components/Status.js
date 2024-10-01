@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { AccountSettingsContext } from './AccountSettings';
+import Button from 'react-bootstrap/Button';
 
 const Status = () => {  
     const [status, setStatus] = useState(false);
@@ -18,8 +19,10 @@ const Status = () => {
     }, []);
 
     return (
-        <div>
-            {status ? <button onClick={logout}>Logout</button> : <button>Login</button>}
+        <div class = "container">
+        <>
+            {status ? <Button variant = "danger" onClick={logout}>Logout</Button> : <button>Login</button>}
+        </>
         </div>
     );
 };

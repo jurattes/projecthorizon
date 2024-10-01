@@ -47,7 +47,7 @@ const Login = () => {
         setFailedAttempts(0);
         setTimeoutMessage('');
         localStorage.removeItem('lockoutTime');
-        <Redirect to="/" />
+        <Redirect to="/home" />
 
         if (rememberMe) {
           localStorage.setItem('userData', JSON.stringify(data));

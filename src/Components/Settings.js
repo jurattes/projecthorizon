@@ -3,9 +3,10 @@ import { AccountSettingsContext } from './AccountSettings';
 import ChangePassword from './ChangePassword';
 import ChangeEmail from './ChangeEmail';
 import { Redirect } from 'react-router-dom/cjs/react-router-dom.min';
+import Status from './Status';
 
 export default () => {
-    const { getSession, logout } = useContext(AccountSettingsContext);
+    const { getSession } = useContext(AccountSettingsContext);
     const [loggedIn, setLoggedIn] = useState(false);
 
     useEffect(() => {
@@ -24,11 +25,11 @@ export default () => {
     return (
         <div>
             {loggedIn && (
-                <div>
-                    <h1>Settings</h1>
+                <div className = "container">
+                    <h1> Settings</h1>
                     <ChangePassword />
                     <ChangeEmail />
-                    <button onClick={logout}>Logout</button>
+                    <Status />
                 </div>
             )}
         </div>
