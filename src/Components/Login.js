@@ -8,7 +8,6 @@ import './styles.css';
 import hide from './assets/eye-slash.svg';
 import show from './assets/eye.svg';
 import logo from './assets/logo.png';
-import { Redirect } from 'react-router-dom/cjs/react-router-dom.min';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -17,22 +16,25 @@ const Login = () => {
   const [isLocked, setIsLocked] = useState(false);
   const [timeoutMessage, setTimeoutMessage] = useState('');
   const [timeLeft, setTimeLeft] = useState(0);
-  const [rememberMe, setRememberMe] = useState(false); // Track Remember Me
-  const [fadeOut, setFadeOut] = useState(false);  // For fade-out effect
-  const history = useHistory();  // For redirection
+  const [rememberMe, setRememberMe] = useState(false);
+  const [fadeOut, setFadeOut] = useState(false); 
+  const history = useHistory();
 
   const { authenticate } = useContext(AccountSettingsContext);
   const lockTime = 5 * 60 * 1000;
 
+
+  // Redirect to /HOME after fade-out animation
   useEffect(() => {
     if (fadeOut) {
       setTimeout(() => {
-        history.push('/HOME');  // Redirect to /HOME after fade-out
-      }, 1000);  // Adjust time for fade-out duration
+        history.push('/HOME');
+      }, 1000); 
     }
   }, [fadeOut, history]);
 
 
+  // Authenticate user
   const onSubmit = (event) => {
     event.preventDefault();
 
@@ -63,6 +65,7 @@ const Login = () => {
 
   
 
+  // Lock form when locked out
   const lockForm = () => {
     const lockoutEnd = Date.now() + lockTime;
     localStorage.setItem('lockoutTime', lockoutEnd.toString());
@@ -75,6 +78,7 @@ const Login = () => {
     setRememberMe(event.target.checked);
   };
 
+  // Lockout timer (5 mins)
   useEffect(() => {
     const lockoutTime = localStorage.getItem('lockoutTime');
     if (lockoutTime) {
@@ -105,11 +109,10 @@ const Login = () => {
       }
     }
 
+    // Logs the user in if they're already logged in
     const storedUserData = localStorage.getItem('userData') || sessionStorage.getItem('userData');
     if (storedUserData) {
-      const userData = JSON.parse(storedUserData);
-      console.log('User already logged in:', userData);
-      // Log the user in automatically if needed
+      history.push('/home');
     }
   }, []);
 
@@ -119,6 +122,7 @@ const Login = () => {
     }
   }, [failedAttempts]);
 
+  // Toggle password visibility
   useEffect(() => {
     const pwrd = document.getElementById('pw');
     const toggleVisibility = document.getElementById('ToggleVisibility');
@@ -135,6 +139,7 @@ const Login = () => {
     });
   }, []);
 
+  // Format time
   const formatTime = (milliseconds) => {
     const totalSeconds = Math.floor(milliseconds / 1000);
     const minutes = Math.floor(totalSeconds / 60);
