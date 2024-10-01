@@ -19,7 +19,7 @@ const Status = () => {
 
     return (
         <div>
-            {status ? <button onClick={logout}>Logout</button> : "Not logged in"}
+            {status ? <button onClick={logout}>Logout</button> : <button>Login</button>}
         </div>
     );
 };

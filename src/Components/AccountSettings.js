@@ -60,6 +60,8 @@ const AccountSettings = (props) => {
         const user = Pool.getCurrentUser();
         if (user) {
             user.signOut();
+            localStorage.removeItem('userData');
+            sessionStorage.removeItem('userData');
         }
     };
 

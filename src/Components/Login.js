@@ -3,67 +3,77 @@ import { AccountSettingsContext } from './AccountSettings';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min';
 import './css/login.css';
+import { useHistory } from 'react-router-dom';
+import './styles.css';
 import hide from './assets/eye-slash.svg';
 import show from './assets/eye.svg';
 import logo from './assets/logo.png';
-import Status from './Status';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [failedAttempts, setFailedAttempts] = useState(0); // Track failed attempts
-  const [isLocked, setIsLocked] = useState(false);        // Lock the form after 3 attempts
-  const [timeoutMessage, setTimeoutMessage] = useState(''); // Message shown during timeout
-  const [timeLeft, setTimeLeft] = useState(0); // Track the remaining lockout time
+  const [failedAttempts, setFailedAttempts] = useState(0);
+  const [isLocked, setIsLocked] = useState(false);
+  const [timeoutMessage, setTimeoutMessage] = useState('');
+  const [timeLeft, setTimeLeft] = useState(0);
+  const [rememberMe, setRememberMe] = useState(false); // Track Remember Me
+  const [fadeOut, setFadeOut] = useState(false);  // For fade-out effect
+  const history = useHistory();  // For redirection
 
   const { authenticate } = useContext(AccountSettingsContext);
-  const lockTime = 5 * 60 * 1000; // 5 minutes in milliseconds
+  const lockTime = 5 * 60 * 1000;
+
+  useEffect(() => {
+    if (fadeOut) {
+      setTimeout(() => {
+        history.push('/HOME');  // Redirect to /HOME after fade-out
+      }, 1000);  // Adjust time for fade-out duration
+    }
+  }, [fadeOut, history]);
+
 
   const onSubmit = (event) => {
     event.preventDefault();
 
     if (isLocked) {
-      return; // Prevent submission if the form is locked
+      return;
     }
 
     authenticate(email, password)
       .then((data) => {
         console.log(data);
+        setFadeOut(true);
         setFailedAttempts(0);
         setTimeoutMessage('');
-        localStorage.removeItem('lockoutTime'); // Clear lockout time on success
+        localStorage.removeItem('lockoutTime');
+
+        if (rememberMe) {
+          localStorage.setItem('userData', JSON.stringify(data));
+        } else {
+          sessionStorage.setItem('userData', JSON.stringify(data));
+        }
       })
+      
       .catch((err) => {
         console.error(err);
         setFailedAttempts((prevAttempts) => prevAttempts + 1);
       });
   };
 
-  // Lock the form and store lockout timestamp in localStorage
+  
+
   const lockForm = () => {
     const lockoutEnd = Date.now() + lockTime;
     localStorage.setItem('lockoutTime', lockoutEnd.toString());
     setIsLocked(true);
     setTimeLeft(lockTime);
     setTimeoutMessage('Too many failed attempts. Please try again after 5 minutes.');
-
-    const interval = setInterval(() => {
-      const now = Date.now();
-      const remainingTime = lockoutEnd - now;
-
-      if (remainingTime <= 0) {
-        clearInterval(interval);
-        localStorage.removeItem('lockoutTime');
-        setFailedAttempts(0);
-        setIsLocked(false);
-        setTimeoutMessage('');
-      } else {
-        setTimeLeft(remainingTime);
-      }
-    }, 1000);
   };
 
-  // Check localStorage for an active lockout on page load
+  const handleRememberMeChange = (event) => {
+    setRememberMe(event.target.checked);
+  };
+
   useEffect(() => {
     const lockoutTime = localStorage.getItem('lockoutTime');
     if (lockoutTime) {
@@ -73,6 +83,7 @@ const Login = () => {
         setIsLocked(true);
         setTimeoutMessage('Too many failed attempts. Please try again after 5 minutes.');
         setTimeLeft(remainingTime);
+
 
         const interval = setInterval(() => {
           const now = Date.now();
@@ -92,16 +103,21 @@ const Login = () => {
         return () => clearInterval(interval);
       }
     }
+
+    const storedUserData = localStorage.getItem('userData') || sessionStorage.getItem('userData');
+    if (storedUserData) {
+      const userData = JSON.parse(storedUserData);
+      console.log('User already logged in:', userData);
+      // Log the user in automatically if needed
+    }
   }, []);
 
-  // Lock the form after 3 failed attempts
   useEffect(() => {
     if (failedAttempts >= 3) {
       lockForm();
     }
   }, [failedAttempts]);
 
-  // Password visibility toggle
   useEffect(() => {
     const pwrd = document.getElementById('pw');
     const toggleVisibility = document.getElementById('ToggleVisibility');
@@ -118,7 +134,6 @@ const Login = () => {
     });
   }, []);
 
-  // Display remaining time in minutes and seconds
   const formatTime = (milliseconds) => {
     const totalSeconds = Math.floor(milliseconds / 1000);
     const minutes = Math.floor(totalSeconds / 60);
@@ -127,7 +142,7 @@ const Login = () => {
   };
 
   return (
-    <div className="container">
+    <div className={`container ${fadeOut ? 'fade-out' : ''}`}>
       <form onSubmit={onSubmit}>
         <div className="text center mb-4">
           <a href="/">
@@ -143,7 +158,7 @@ const Login = () => {
             onChange={(event) => setEmail(event.target.value)}
             placeholder="Email Address"
             required
-            disabled={isLocked} // Disable input if locked
+            disabled={isLocked}
           />
         </div>
         <div className="input">
@@ -155,7 +170,7 @@ const Login = () => {
             onChange={(event) => setPassword(event.target.value)}
             placeholder="Password"
             required
-            disabled={isLocked} // Disable input if locked
+            disabled={isLocked}
           />
           <label className="togglePassword">
             <input type="checkbox" id="ToggleVisibility" />
@@ -170,7 +185,11 @@ const Login = () => {
             <p>
               <a href="/forgotpassword">Forgot Password?</a>
             </p>
-            <input type="checkbox" value="remember-me" /> Remember me
+            <input
+              type="checkbox"
+              checked={rememberMe}
+              onChange={handleRememberMeChange}
+            /> Remember me
           </label>
         </div>
         <button type="submit" className="btn" disabled={isLocked}>

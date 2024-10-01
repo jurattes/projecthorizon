@@ -7,14 +7,16 @@ import ForgotPassword from './Components/ForgotPassword';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { AccountSettings } from './Components/AccountSettings';
 import Status from './Components/Status';
+import { AuthProvider } from './Components/AuthContext';
 
 function App() {
   return (
     <AccountSettings>
+      <AuthProvider>
       <Router>
       <div className="App">
       <header className="App-header">
-        
+        <Header />
       </header>
       <div className = "content">
       <Switch>
@@ -34,6 +36,7 @@ function App() {
       </div>
     </div>
     </Router>
+      </AuthProvider>
     </AccountSettings>
   );
 }
