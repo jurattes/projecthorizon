@@ -1,6 +1,6 @@
 import './css/Header.css';
-import settings from './assets/settings.svg';
 import React, { useEffect, useContext, useState } from 'react';
+import Logo from './assets/logo1.png';
 import { AccountSettingsContext } from './settings/AccountSettings';
 import { useLocation } from 'react-router-dom';
 
@@ -14,33 +14,30 @@ function Header() {
     }
 
   return (
-    <nav className="container navbar sticky-top navbar-light bg-light">
+    <nav className="navbar navbar-expand-lg sticky-top navbar-light transparent-navbar">
       <div className="container-fluid">
-        <div className="navbar-brand">
-          ye this my logo
-        </div>
-        <div className="d-flex">
+        <a className="navbar-brand" href = "/home">
+          <img src={Logo} alt="Logo" width="250" />
+        </a>
+        <div className="d-flex ms-auto">
           <div className="col">
             {isAuthenticated ? (
               <>
-                <div className="btn btn-outline-secondary mx-2 disabled">
+                <a className="btn btn-secondary mx-2" href = "/settings">
                   Settings
-                </div>
-                <div
-                  onClick={() => logout()}
-                  className="btn btn-outline-secondary mx-2"
-                >
+                </a>
+                <div onClick={() => logout()} className="btn btn-danger">
                   Logout
                 </div>
               </>
             ) : (
               <>
-                <div className="btn btn-outline-secondary mx-2" onClick = {() => window.location.href = '/login'}>
+                <a id = "loginBtn"className="btn btn-primary mx-2" href = '/login'>
                   Login
-                </div>
-                <div className="btn btn-outline-secondary mx-2" onClick = {() => window.location.href = '/register'}>
+                </a>
+                <a id = "registerBtn" className="btn btn-warning mx-2" href = "/register">
                   Register
-                </div>
+                </a>
               </>
             )}
           </div>
