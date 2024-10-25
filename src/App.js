@@ -7,6 +7,7 @@ import ForgotPassword from './Components/account/ForgotPassword';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { AccountSettings } from './Components/settings/AccountSettings';
 import { AuthProvider } from './Components/settings/AuthContext';
+import { AuctionBody } from './Components/auctions/body';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
         <Route path = "/login"> <Login /> </Route>
         <Route path = "/forgotpassword"> <ForgotPassword /> </Route>
       </Switch>
+      <AuctionBody />
       </div>
     </div>
       </AuthProvider>

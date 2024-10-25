@@ -33,7 +33,7 @@ const Login = () => {
   useEffect(() => {
     if (fadeOut) {
       setTimeout(() => {
-        history.push('/HOME');
+        history.push('/');
       }, 1000); 
     }
   }, [fadeOut, history]);
@@ -51,6 +51,7 @@ const Login = () => {
     setEmailError('');
     setConfirmError('');
 
+    // Login Authentication
     authenticate(email, password)
       .then((data) => {
         console.log(data);
@@ -60,6 +61,7 @@ const Login = () => {
         localStorage.removeItem('lockoutTime');
         alert('Logged in succesfully!');
 
+        // Store user data in localStorage or sessionStorage (WIP: Cookies)
         if (rememberMe) {
           localStorage.setItem('userData', JSON.stringify(data));
         } else {
@@ -67,6 +69,7 @@ const Login = () => {
         }
       })
       
+      // Error handling, +1 on block if failed (max 3 failed attempts)
       .catch((err) => {
         console.error(err);
         setConfirmError(err.message);
@@ -75,7 +78,6 @@ const Login = () => {
       });
   };
 
-  
 
   // Lock form when locked out
   const lockForm = () => {
