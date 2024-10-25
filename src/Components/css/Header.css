@@ -7,24 +7,3 @@
 .navbar-brand {
   font-size: 1.5rem; /* Logo size */
 }
-
-.btn-success {
-  background-color: #28a745; /* Green for Login */
-  border: none;
-}
-
-.btn-primary {
-  background-color: #007bff; /* Blue for Register */
-  border: none;
-}
-
-.btn-outline-secondary {
-  border: 1px solid #6c757d; /* Styling for Settings button */
-  color: #6c757d;
-  background-color: transparent;
-}
-
-.btn-danger {
-  background-color: #dc3545; /* Red Logout button */
-  border: none;
-}

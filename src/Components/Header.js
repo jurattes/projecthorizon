@@ -13,6 +13,32 @@ function Header() {
         return null;
     }
 
+    if (location.pathname === '/settings') {
+        return (
+          <nav className="navbar navbar-expand-lg sticky-top navbar-light transparent-navbar">
+      <div className="container-fluid">
+        <a className="navbar-brand" href = "/home">
+          <img src={Logo} alt="Logo" width="250" />
+        </a>
+        <div className="d-flex ms-auto">
+          <div className="col">
+            {isAuthenticated ? (
+              <>
+                <div onClick={() => logout()} className="btn btn-danger">
+                  Logout
+                </div>
+              </>
+            ) : (
+              <>
+              </>
+            )}
+          </div>
+        </div>
+      </div>
+    </nav>
+        ); 
+    }
+
   return (
     <nav className="navbar navbar-expand-lg sticky-top navbar-light transparent-navbar">
       <div className="container-fluid">
