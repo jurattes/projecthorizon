@@ -14,9 +14,7 @@ function App() {
     <AccountSettings>
       <AuthProvider>
       <div className="App">
-      <header className="App-header">
-        
-      </header>
+        <Header />
       <div className = "content">
       <Switch>
         <Route path = "/register"> <Registration /> </Route>

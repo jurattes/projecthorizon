@@ -1,48 +1,75 @@
 import './css/Header.css';
-import settings from './assets/settings.svg';
 import React, { useEffect, useContext, useState } from 'react';
+import Logo from './assets/logo1.png';
 import { AccountSettingsContext } from './settings/AccountSettings';
 import { useLocation } from 'react-router-dom';
 
 function Header() {
-  const { getSession } = useContext(AccountSettingsContext);
-  const [loggedIn, setLoggedIn] = useState(false);
+  const { isAuthenticated, logout } = useContext(AccountSettingsContext);
   const location = useLocation();
 
-    useEffect(() => {
-        getSession()
-            .then((data) => {
-                console.log(data);
-                setLoggedIn(true);
-            })
-            .catch((err) => {
-                console.error(err);
-                setLoggedIn(false);
-            });
-    }, []);
 
     if (location.pathname === '/login' || location.pathname === '/register' || location.pathname === '/forgotpassword') {
         return null;
     }
 
+    if (location.pathname === '/settings') {
+        return (
+          <nav className="navbar navbar-expand-lg sticky-top navbar-light transparent-navbar">
+      <div className="container-fluid">
+        <a className="navbar-brand" href = "/home">
+          <img src={Logo} alt="Logo" width="250" />
+        </a>
+        <div className="d-flex ms-auto">
+          <div className="col">
+            {isAuthenticated ? (
+              <>
+                <div onClick={() => logout()} className="btn btn-danger">
+                  Logout
+                </div>
+              </>
+            ) : (
+              <>
+              </>
+            )}
+          </div>
+        </div>
+      </div>
+    </nav>
+        ); 
+    }
+
   return (
-    <header>
-      <nav>
-        <ul>
-          <li><a href="/">Home</a></li>
-          {loggedIn ? (
-            <>
-            <li><a href="/settings"><img src={settings} alt="Settings" /></a></li>
-            </>
-              ) : (
-          <>
-            <li><a href="/login">Login</a></li>
-            <li><a href="/register">Register</a></li>
-          </>
-)}
-        </ul>
-      </nav>
-    </header>
+    <nav className="navbar navbar-expand-lg sticky-top navbar-light transparent-navbar">
+      <div className="container-fluid">
+        <a className="navbar-brand" href = "/home">
+          <img src={Logo} alt="Logo" width="250" />
+        </a>
+        <div className="d-flex ms-auto">
+          <div className="col">
+            {isAuthenticated ? (
+              <>
+                <a className="btn btn-secondary mx-2" href = "/settings">
+                  Settings
+                </a>
+                <div onClick={() => logout()} className="btn btn-danger">
+                  Logout
+                </div>
+              </>
+            ) : (
+              <>
+                <a id = "loginBtn"className="btn btn-primary mx-2" href = '/login'>
+                  Login
+                </a>
+                <a id = "registerBtn" className="btn btn-warning mx-2" href = "/register">
+                  Register
+                </a>
+              </>
+            )}
+          </div>
+        </div>
+      </div>
+    </nav>
   );
 }
 

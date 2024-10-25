@@ -2,12 +2,12 @@ import React, { useState, createContext, useEffect } from 'react';
 import { CognitoUser, AuthenticationDetails } from 'amazon-cognito-identity-js';
 import Pool from './UserPool.js';
 import { useHistory } from 'react-router-dom';
-import '../css/fade.css';
 
 const AccountSettingsContext = createContext();
 
 const AccountSettings = (props) => {
-    const [fadeOut, setFadeOut] = useState(false);  // For fade-out effect
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
     const history = useHistory();  // For redirection
 
     const getSession = async () => {
@@ -48,14 +48,17 @@ const AccountSettings = (props) => {
             onSuccess: (data) => {
                 console.log("onSuccess: " + data);
                 resolve(data);
+                setIsAuthenticated(true);
             },
             onFailure: (err) => {
                 console.error("onFailure: " + err);
                 reject(err);
+                setIsAuthenticated(false);
             },
             newPasswordRequired: (data) => {
                 console.log("newPasswordRequired: " + data);
                 resolve(data);
+                setIsAuthenticated(true);
             }
         });
         })
@@ -68,22 +71,29 @@ const AccountSettings = (props) => {
             localStorage.removeItem('userData');
             sessionStorage.removeItem('userData');
             alert('Logged out successfully!');
-            setFadeOut(true);
+            history.push('/home');
+            setIsAuthenticated(false);
         }
     };
 
     useEffect(() => {
-        if (fadeOut) {
-            setTimeout(() => {
-                history.push('/HOME');  // Redirect to /HOME after fade-out
-            }, 1000);  // Adjust time for fade-out duration
-        }
-    }, [fadeOut, history]);
+        getSession()
+            .then((data) => {
+                console.log(data);
+                setIsAuthenticated(true);
+                setIsLoading(false);
+            })
+            .catch((err) => {
+                console.error(err);
+                setIsAuthenticated(false);
+                setIsLoading(false);
+            });
+    }, []);
 
     return (
-        <div className={`a ${fadeOut ? 'fade-out' : ''}`}>
-            <AccountSettingsContext.Provider value={{ getSession, authenticate, logout }}>
-                {props.children}
+        <div>
+            <AccountSettingsContext.Provider value={{ getSession, authenticate, logout, isAuthenticated }}>
+                {!isLoading && props.children}
             </AccountSettingsContext.Provider>
         </div>
     );
