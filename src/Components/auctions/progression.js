@@ -10,11 +10,20 @@ export const Progression = ({ auction, setAuction }) => {
             setAuction(null);
         }
     }, [isCompleted, setAuction]);
+
+    const progressVariants = {
+        initial: {
+            width: '0%'},
+        animate: {
+            width: `${progress}%`},
+    };
     return (
         <motion.div
-            style={{ height: '5px', background: 'black'}}
-            initial={{ width: '0%' }}
-            animate={{ width: `${progress}%` }}
+            style={{ height: '5px', background: 'black' }}
+            variants={progressVariants}
+            initial="initial"
+            animate="animate"
+            transition={{ duration: 0.5, ease: 'easeInOut' }}
         />
     )
 };

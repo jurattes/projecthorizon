@@ -16,8 +16,10 @@ const AccountSettings = (props) => {
             if (user) {
                 user.getSession(async (err, session) => {
                     if (err) {
+                        console.error('Failed to retrieve user session.', err);
                         reject();
                     } else {
+                        try {
                         const attributes = await new Promise((resolve, reject) => {
                             user.getUserAttributes((err, attributes) => {
                                 if (err) {
@@ -28,14 +30,19 @@ const AccountSettings = (props) => {
                                     results[attr.getName()] = attr.getValue();
                                 });
                                 resolve(results);
-                                console.log(results);
                             });
-                        })
+                        });
                         resolve({ user, ...session, ...attributes });
+                    } catch (attributesError) {
+                        console.error('Failed to retrieve user attributes.', attributesError);
+                        reject(attributesError);
                     }
+            }
+                    
         });
             } else {
-                reject();
+                console.warn('No current user session was found.')
+                reject(new Error("No user session"));
             }
         });
     };
@@ -73,12 +80,12 @@ const AccountSettings = (props) => {
             localStorage.removeItem('userData');
             sessionStorage.removeItem('userData');
             alert('Logged out successfully!');
-            history.push('/home');
             setIsAuthenticated(false);
+            history.replace('/home');
         }
     };
 
-    useEffect(() => {
+    /* useEffect(() => {
         getSession()
             .then((data) => {
                 console.log(data);
@@ -90,6 +97,22 @@ const AccountSettings = (props) => {
                 setIsAuthenticated(false);
                 setIsLoading(false);
             });
+    }, []); */
+
+    useEffect(() => {
+        const checkSession = async () => {
+            try {
+                const data = await getSession();
+                console.log("Session data:", data);
+                setIsAuthenticated(true);
+            } catch (err) {
+                console.error("Error during session retrieval:", err);
+                setIsAuthenticated(false);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        checkSession();
     }, []);
 
     return (
