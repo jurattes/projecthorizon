@@ -28,6 +28,7 @@ const AccountSettings = (props) => {
                                     results[attr.getName()] = attr.getValue();
                                 });
                                 resolve(results);
+                                console.log(results);
                             });
                         })
                         resolve({ user, ...session, ...attributes });
@@ -47,6 +48,7 @@ const AccountSettings = (props) => {
         user.authenticateUser(authDetails, {
             onSuccess: (data) => {
                 console.log("onSuccess: " + data);
+                console.log(data);
                 resolve(data);
                 setIsAuthenticated(true);
             },

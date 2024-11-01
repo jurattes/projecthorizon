@@ -1,9 +1,9 @@
-import firebase from 'firebase/app';
-import 'firebase/auth';
-import 'firebase/database';
-import 'firebase/firestore';
+import { initializeApp } from 'firebase/app';
+import { getAuth } from 'firebase/auth';
+import { getFirestore, serverTimestamp } from 'firebase/firestore';
+import { getStorage } from 'firebase/storage';
 
-const app = firebase.initializeApp({
+const app = initializeApp({
     apiKey: "AIzaSyBHIIMrtVoq9L3dT8RllI0TByVOmwQZWhc",
     authDomain: "projecthorizon-c61df.firebaseapp.com",
     projectId: "projecthorizon-c61df",
@@ -12,7 +12,7 @@ const app = firebase.initializeApp({
     appId: "1:478137911337:web:6f5e96d06b0c365eaf7438"
 });
 
-export const authApp = app.auth();
-export const storageApp = app.storage();
-export const firestoreApp = app.firestore();
-export const timestamp = firebase.firestore.FieldValue.serverTimestamp;
+export const authApp = getAuth(app);
+export const storageApp = getStorage(app);
+export const firestoreApp = getFirestore(app);
+export const timestamp = serverTimestamp;

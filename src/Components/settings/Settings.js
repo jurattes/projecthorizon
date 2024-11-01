@@ -29,7 +29,6 @@ export default () => {
                     <h1> Settings</h1>
                     <ChangePassword />
                     <ChangeEmail />
-                    <Status />
                 </div>
             )}
         </div>
