@@ -3,6 +3,7 @@ import { AccountSettingsContext } from './AccountSettings';
 import ChangePassword from '../account/ChangePassword';
 import ChangeEmail from '../account/ChangeEmail';
 import { Redirect } from 'react-router-dom/cjs/react-router-dom.min';
+import ChangeUser from '../account/ChangeUsername';
 
 export default () => {
     const { getSession } = useContext(AccountSettingsContext);
@@ -28,7 +29,7 @@ export default () => {
                     <h1> Settings</h1>
                     <ChangePassword />
                     <ChangeEmail />
-                    
+                    <ChangeUser />
                 </div>
             )}
         </div>

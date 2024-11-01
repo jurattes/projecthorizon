@@ -10,6 +10,7 @@ import show from '../assets/eye.svg';
 import logo from '../assets/logo.png';
 
 const Login = () => {
+  const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [failedAttempts, setFailedAttempts] = useState(0);
@@ -28,6 +29,27 @@ const Login = () => {
   // Regex for password validation
   const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
 
+  // Set Cookies
+  const setCookie = (name, value, days) => {
+    const expires = new Date(Date.now() + days * 24 * 60 * 60 * 1000).toUTCString();
+    document.cookie = `${name}=${value}; expires=${expires}; path=/`;
+  }
+
+  // Get Cookies
+  const getCookie = (name) => {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+    return '';
+  }
+
+  // Load username from cookie on mount
+  useEffect(() => {
+    const storedUsername = getCookie('username');
+    if (storedUsername) {
+      setUsername(storedUsername);
+    }
+  }, []);
 
   // Redirect to /HOME after fade-out animation
   useEffect(() => {
@@ -67,7 +89,12 @@ const Login = () => {
         } else {
           sessionStorage.setItem('userData', JSON.stringify(data));
         }
-      })
+
+      // Save Username in Cookies
+      if (username.trim()) {
+        setCookie('username', username, 365);
+      }
+    })
       
       // Error handling, +1 on block if failed (max 3 failed attempts)
       .catch((err) => {
@@ -181,6 +208,16 @@ const Login = () => {
             disabled={isLocked}
           />
           {emailError && <div style={{ color: 'red', fontSize: '12px', float: 'left', marginTop: '-20px', paddingBottom: '25px' }}>{emailError}</div>}
+        </div>
+        <div className="input">
+          <input
+            type="text"
+            value={username}
+            className="form-control"
+            onChange={(event) => setUsername(event.target.value)}
+            placeholder="Username"
+            required
+          />
         </div>
         <div className="input">
           <input
