@@ -3,6 +3,7 @@ import { AccountSettingsContext } from '../settings/AccountSettings';
 import { AddAuction } from './addAuction';
 import { Progression } from './progression';
 import { useFirestore } from '../hooks/firestore';
+import { AuctionCard } from './Card';
 
 export const AuctionBody = () => {
     const { isAuthenticated } = useContext(AccountSettingsContext);
@@ -13,7 +14,15 @@ export const AuctionBody = () => {
             <div className = "container">
                 {auction && <Progression auction={auction} setAuction={setAuction} />}
                 {isAuthenticated && <AddAuction setAuction={setAuction}/>}
-                {docs && <h1> Docs exist: {docs.length}</h1>}
+                {docs && (
+                    <div className = "row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+                        {docs.map((doc) => {
+                            return (
+                                <AuctionCard item={doc} key={doc.id} />
+                            )
+                        })}
+                    </div>
+                )}
             </div>
         </div>
     );
