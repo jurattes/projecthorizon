@@ -92,7 +92,7 @@ const Login = () => {
 
       // Save Username in Cookies
       if (username.trim()) {
-        setCookie('username', username, 365);
+        setCookie('username', username, 7);
       }
     })
       

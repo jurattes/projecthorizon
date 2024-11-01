@@ -1,7 +1,9 @@
 import React, { useState, createContext, useEffect } from 'react';
 import { CognitoUser, AuthenticationDetails } from 'amazon-cognito-identity-js';
+import { firestoreApp } from '../config/firebase';
 import Pool from './UserPool.js';
 import { useHistory } from 'react-router-dom';
+import { collection, doc, updateDoc, deleteDoc } from 'firebase/firestore';
 
 const AccountSettingsContext = createContext();
 
@@ -9,6 +11,7 @@ const AccountSettings = (props) => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const history = useHistory();  // For redirection
+    const [globalMsg, setGlobalMsg] = useState("");
 
     const getSession = async () => {
         return await new Promise((resolve, reject) => {
@@ -42,6 +45,9 @@ const AccountSettings = (props) => {
         });
             } else {
                 console.warn('No current user session was found.')
+                document.cookie = "username=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";// make this dynamic with useEffect later
+                localStorage.removeItem('userData');
+                sessionStorage.removeItem('userData');
                 reject(new Error("No user session"));
             }
         });
@@ -82,14 +88,7 @@ const AccountSettings = (props) => {
         }
     };
 
-    useEffect(() => {
-        if (!isAuthenticated) {
-            // Run logout cleanup tasks when isAuthenticated changes to false
-            document.cookie = "username=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-            localStorage.removeItem('userData');
-            sessionStorage.removeItem('userData');
-        }
-    }, [isAuthenticated, history]); // Depend on isAuthenticated to re-run on logout
+
 
     /* useEffect(() => {
         getSession()
@@ -121,9 +120,44 @@ const AccountSettings = (props) => {
         checkSession();
     }, []);
 
+    // Auction Functions
+    const getCookie = (name) => {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+        return null;
+    };
+    const bidAuction = (auctionID, bidAmount) => {
+        if (!isAuthenticated) {
+            return setGlobalMsg('Please login to bid');
+        }
+
+        let newPrice = Math.floor((bidAmount / 100) * 110);
+        const db = collection(firestoreApp, 'auctions');
+        const auctionDoc = doc(db, auctionID);
+
+        return updateDoc(auctionDoc,{
+            curPrice: newPrice,
+            curWinner: getCookie('username')
+        })
+    }
+
+    const endAuction = (auctionID) => {
+        const db = collection(firestoreApp, 'auctions');
+        const auctionDoc = doc(db, auctionID);
+
+        return deleteDoc(auctionDoc);
+    }
+
+    useEffect(() => {
+        const interval = setTimeout(() => setGlobalMsg(''), 5000);
+        return () => clearInterval(interval);
+    }, [globalMsg]);
+
+
     return (
         <div>
-            <AccountSettingsContext.Provider value={{ getSession, authenticate, logout, isAuthenticated }}>
+            <AccountSettingsContext.Provider value={{ getSession, authenticate, logout, isAuthenticated, bidAuction, endAuction, globalMsg }}>
                 {!isLoading && props.children}
             </AccountSettingsContext.Provider>
         </div>

@@ -1,4 +1,5 @@
 import React, { useContext, useState } from 'react';
+import { Alert } from 'react-bootstrap';
 import { AccountSettingsContext } from '../settings/AccountSettings';
 import { AddAuction } from './addAuction';
 import { Progression } from './progression';
@@ -7,7 +8,7 @@ import { AuctionCard } from './Card';
 import { useLocation } from 'react-router-dom';
 
 export const AuctionBody = () => {
-    const { isAuthenticated } = useContext(AccountSettingsContext);
+    const { isAuthenticated, globalMsg } = useContext(AccountSettingsContext);
     const [ auction, setAuction ] = useState(null);
     const { docs } = useFirestore('auctions');
     const location = useLocation();
@@ -20,6 +21,7 @@ export const AuctionBody = () => {
         <div className = "py-5">
             <div className = "container">
                 {auction && <Progression auction={auction} setAuction={setAuction} />}
+                {globalMsg && <Alert variant = "info">{globalMsg}</Alert>}
                 {isAuthenticated && <AddAuction setAuction={setAuction}/>}
                 {docs && (
                     <div className = "row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
