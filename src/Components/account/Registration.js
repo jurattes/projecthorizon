@@ -7,6 +7,7 @@ import hide from '../assets/eye-slash.svg';
 import show from '../assets/eye.svg';
 
 const Registration = () => {
+  const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -17,12 +18,19 @@ const Registration = () => {
   const [fadeOut, setFadeOut] = useState(false);  // For fade-out effect
   const history = useHistory();  // For redirection
 
+  // Set and Get Cookies
+  const setCookie = (name, value, days) => {
+    const expires = new Date(Date.now() + days * 24 * 60 * 60 * 1000).toUTCString();
+    document.cookie = `${name}=${value}; expires=${expires}; path=/`;
+  };
+
   // Sends user to home page if already logged in
   const storedUserData = localStorage.getItem('userData') || sessionStorage.getItem('userData');
     if (storedUserData) {
       history.push('/home');
     }
   
+  // Add Username Validation somehow
 
   // Regex for password validation
   const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
@@ -104,6 +112,11 @@ const Registration = () => {
       }
       console.log(data);
       setFadeOut(true);  // Trigger fade-out effect
+
+      // Save username in Cookies
+      if (username.trim) {
+        setCookie('username', username, 365);
+      }
     });
   };
 
@@ -116,6 +129,15 @@ const Registration = () => {
           </a>
           <h1 className="h2 mb-3 font-weight-normal">CREATE AN ACCOUNT</h1>
           <p>Ready to be a part of the club? Fill out the registration form below to get started!</p>
+        </div>
+        <div className="input">
+          <input
+            value={username}
+            className="form-control"
+            placeholder="Your Username"
+            onChange={(event) => setUsername(event.target.value)}
+            required
+          />
         </div>
         <div className="input">
           <input
