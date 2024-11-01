@@ -4,11 +4,18 @@ import { AddAuction } from './addAuction';
 import { Progression } from './progression';
 import { useFirestore } from '../hooks/firestore';
 import { AuctionCard } from './Card';
+import { useLocation } from 'react-router-dom';
 
 export const AuctionBody = () => {
     const { isAuthenticated } = useContext(AccountSettingsContext);
     const [ auction, setAuction ] = useState(null);
     const { docs } = useFirestore('auctions');
+    const location = useLocation();
+
+    if (location.pathname !== '/home') {
+        return null;
+    }
+
     return (
         <div className = "py-5">
             <div className = "container">

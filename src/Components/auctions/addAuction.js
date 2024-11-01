@@ -1,11 +1,11 @@
 import { Button, Form, Modal, Alert, Row, Col } from 'react-bootstrap';
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 
 export const AddAuction = ({ setAuction }) => {
     const [showForm, setShowForm] = useState(false);
     const [error, setError] = useState('');
 
-  const username = useRef();
+  const usernameRef = useRef(); 
   const itemTitle = useRef();
   const itemDesc = useRef();
   const startPrice = useRef();
@@ -17,11 +17,27 @@ export const AddAuction = ({ setAuction }) => {
 
   const imgTypes = ['image/png', 'image/jpeg', 'image/jpg'];
 
+  // Helper function to get a cookie by name
+  const getCookie = (name) => {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+    return null;
+};
+
+/* useEffect(() => {
+    // Fetch username from cookie on component mount
+    const storedUsername = getCookie('username');
+    if (storedUsername && usernameRef.current) {
+        usernameRef.current.value = storedUsername;
+    }
+}, []); */
+
   const submitForm = async (e) => {
     e.preventDefault();
     setError('');
 
-    if (!imgTypes.includes(itemImage.current.files[0].type)) {
+    if (!imgTypes.includes(itemImage.current.files[0].type || !itemImage.current.files.length)) {
       return setError('Please use a valid image');
     }
 
@@ -31,7 +47,7 @@ export const AddAuction = ({ setAuction }) => {
     );
 
     let newAuction = {
-      username: username.current.value,
+      username: getCookie('username'),
       title: itemTitle.current.value,
       desc: itemDesc.current.value,
       curPrice: startPrice.current.value,
@@ -57,16 +73,6 @@ export const AddAuction = ({ setAuction }) => {
               </Modal.Header>
               <Modal.Body>
                 {error && <Alert variant="danger">{error}</Alert>}
-                <Row>
-                    <Col>
-                        <Form.Group>
-                            <Form.Label> Username </Form.Label>
-                            <Form.Control type = "text" required ref = {username} />
-                        </Form.Group>
-                    </Col>
-                    <Col>
-                    </Col>
-                </Row>
                 <Row>
                   <Col>
                     <Form.Group>

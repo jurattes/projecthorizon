@@ -1,10 +1,19 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Countdown from 'react-countdown';
+
+const getCookie = (name) => {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+    return null;
+};
 
 const renderer = ({days, hours, minutes, seconds, completed, props}) => {
     if (completed) {
         return null;
     }
+
+    const isOwner = props.isOwner;
 
     return (
         <div className = "col">
@@ -26,7 +35,15 @@ const renderer = ({days, hours, minutes, seconds, completed, props}) => {
                     </div>
                     <p className = "card-text"> {props.item.desc} </p>
                     <div className = "d-flex justify-content-between align-items-center">
-                        <div className = "btn btn-outline-secondary"> Bid </div>
+                        <div className = "btn-group">
+                            {!props.item.username ? (
+                                <div className = "btn btn-sm btn-outline-secondary"> Bid </div>
+                            ) : isOwner ? (
+                                <div className = "btn btn-sm btn-outline-secondary"> Cancel </div>
+                            ): (
+                                <div className = "btn btn-sm btn-outline-secondary"> Bid </div>
+                            )}
+                        </div>
                     </div>
                 </div>
             </div>
@@ -36,7 +53,14 @@ const renderer = ({days, hours, minutes, seconds, completed, props}) => {
 }
 
 export const AuctionCard = ({ item }) => {
+    const [isOwner, setIsOwner] = useState(false);
+
+    useEffect(() => {
+        const username = getCookie('username');
+        setIsOwner(username === item.username);
+    }, [item.username]);
+
     let expiredDate = item.duration;
 
-    return <Countdown date={expiredDate} item={item} renderer={renderer} />;
+    return <Countdown date={expiredDate} item={item} isOwner={isOwner} renderer={renderer} />;
 }
