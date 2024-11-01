@@ -77,13 +77,19 @@ const AccountSettings = (props) => {
         const user = Pool.getCurrentUser();
         if (user) {
             user.signOut();
-            localStorage.removeItem('userData');
-            sessionStorage.removeItem('userData');
-            alert('Logged out successfully!');
             setIsAuthenticated(false);
             history.replace('/home');
         }
     };
+
+    useEffect(() => {
+        if (!isAuthenticated) {
+            // Run logout cleanup tasks when isAuthenticated changes to false
+            document.cookie = "username=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+            localStorage.removeItem('userData');
+            sessionStorage.removeItem('userData');
+        }
+    }, [isAuthenticated, history]); // Depend on isAuthenticated to re-run on logout
 
     /* useEffect(() => {
         getSession()

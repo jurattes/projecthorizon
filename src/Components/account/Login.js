@@ -55,7 +55,7 @@ const Login = () => {
   useEffect(() => {
     if (fadeOut) {
       setTimeout(() => {
-        history.push('/');
+        history.push('/home');
       }, 1000); 
     }
   }, [fadeOut, history]);

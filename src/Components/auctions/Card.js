@@ -44,6 +44,7 @@ const renderer = ({days, hours, minutes, seconds, completed, props}) => {
                                 <div className = "btn btn-sm btn-outline-secondary"> Bid </div>
                             )}
                         </div>
+                        <p className="display-6">${props.item.curPrice}</p>
                     </div>
                 </div>
             </div>
