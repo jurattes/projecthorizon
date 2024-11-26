@@ -9,6 +9,7 @@ import { AccountSettings } from './Components/settings/AccountSettings';
 import { AuthProvider } from './Components/settings/AuthContext';
 import { AuctionBody } from './Components/auctions/body';
 import { SearchAuctions } from './Components/auctions/search';
+import ModeratorPanel  from './Components/mod/ModeratorPanel';
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
         <Route path = "/login"> <Login /> </Route>
         <Route path = "/forgotpassword"> <ForgotPassword /> </Route>
         <Route path = "/search"> <SearchAuctions /> </Route>
+        <Route path = "/mod"> <ModeratorPanel /> </Route>
       </Switch>
       <AuctionBody />
       </div>

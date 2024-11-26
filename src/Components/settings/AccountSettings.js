@@ -1,16 +1,17 @@
-import React, { useState, createContext, useEffect, useRef } from 'react';
-import { CognitoUser, AuthenticationDetails } from 'amazon-cognito-identity-js';
-import { firestoreApp } from '../config/firebase';
-import Pool from './UserPool.js';
-import { useHistory } from 'react-router-dom';
-import { collection, doc, updateDoc, deleteDoc } from 'firebase/firestore';
+import React, { useState, createContext, useEffect, useRef } from "react";
+import { CognitoUser, AuthenticationDetails } from "amazon-cognito-identity-js";
+import { firestoreApp } from "../config/firebase";
+import Pool from "./UserPool.js";
+import { useHistory } from "react-router-dom";
+import { collection, doc, updateDoc, deleteDoc } from "firebase/firestore";
 
 const AccountSettingsContext = createContext();
 
 const AccountSettings = (props) => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
-    const history = useHistory();  // For redirection
+    const [isMod, setIsMod] = useState(false);
+    const history = useHistory(); // For redirection
     const [globalMsg, setGlobalMsg] = useState("");
 
     const getSession = async () => {
@@ -19,64 +20,85 @@ const AccountSettings = (props) => {
             if (user) {
                 user.getSession(async (err, session) => {
                     if (err) {
-                        console.error('Failed to retrieve user session.', err);
-                        reject();
+                        console.error("Failed to retrieve user session.", err);
+                        reject(err);
                     } else {
                         try {
-                        const attributes = await new Promise((resolve, reject) => {
-                            user.getUserAttributes((err, attributes) => {
-                                if (err) {
-                                    reject(err);
-                                }
-                                const results = {};
-                                attributes.forEach((attr) => {
-                                    results[attr.getName()] = attr.getValue();
-                                });
-                                resolve(results);
+                            const idToken = session.getIdToken();
+                            const payload = idToken.decodePayload();
+
+                            console.log("Decoded ID Token Payload:", payload);
+
+                            // Check if user is in mod group
+                            const groups = payload['cognito:groups'] || [];
+                            setIsMod(groups.includes('mod'));
+
+                            resolve({
+                                user,
+                                ...session,
+                                idToken: {
+                                    jwtToken: idToken.getJwtToken(),
+                                    payload,
+                                },
                             });
-                        });
-                        resolve({ user, ...session, ...attributes });
-                    } catch (attributesError) {
-                        console.error('Failed to retrieve user attributes.', attributesError);
-                        reject(attributesError);
+                        } catch (attributesError) {
+                            console.error("Failed to decode ID Token.", attributesError);
+                            reject(attributesError);
+                        }
                     }
-            }
-                    
-        });
+                });
             } else {
-                console.warn('No current user session was found.')
-                document.cookie = "username=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";// make this dynamic with useEffect later
-                localStorage.removeItem('userData');
-                sessionStorage.removeItem('userData');
+                console.warn("No current user session was found.");
+                setIsMod(false);
+                // Clear cookies and storage if no session
+                document.cookie = "username=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+                localStorage.removeItem("userData");
+                sessionStorage.removeItem("userData");
                 reject(new Error("No user session"));
             }
         });
     };
+
+    
 
     const authenticate = async (Username, Password) => {
         return await new Promise((resolve, reject) => {
             const user = new CognitoUser({ Username, Pool });
             const authDetails = new AuthenticationDetails({ Username, Password });
 
-        user.authenticateUser(authDetails, {
-            onSuccess: (data) => {
-                console.log("onSuccess: " + data);
-                console.log(data);
-                resolve(data);
-                setIsAuthenticated(true);
-            },
-            onFailure: (err) => {
-                console.error("onFailure: " + err);
-                reject(err);
-                setIsAuthenticated(false);
-            },
-            newPasswordRequired: (data) => {
-                console.log("newPasswordRequired: " + data);
-                resolve(data);
-                setIsAuthenticated(true);
-            }
+            user.authenticateUser(authDetails, {
+                onSuccess: (data) => {
+                    console.log("onSuccess:", data);
+                    setIsAuthenticated(true);
+                    resolve(data);
+                    try {
+                        const idToken = data.getIdToken();
+                        const payload = idToken.decodePayload();
+                        console.log("Decoded ID Token Payload:", payload);
+    
+                        // Check if the user is in the 'mod' group
+                        const groups = payload["cognito:groups"] || [];
+                        const isUserMod = groups.includes("mod");
+    
+                        setIsMod(isUserMod); // Update isMod state
+                        console.log(`User mod status (in authenticate): ${isUserMod}`);
+                    } catch (err) {
+                        console.error("Error decoding ID token or setting mod status:", err);
+                        setIsMod(false); // Reset to false if something goes wrong
+                    }
+                },
+                onFailure: (err) => {
+                    console.error("onFailure:", err);
+                    setIsAuthenticated(false);
+                    reject(err);
+                },
+                newPasswordRequired: (data) => {
+                    console.log("newPasswordRequired:", data);
+                    setIsAuthenticated(true);
+                    resolve(data);
+                },
+            });
         });
-        })
     };
 
     const logout = () => {
@@ -84,28 +106,12 @@ const AccountSettings = (props) => {
         if (user) {
             user.signOut();
             setIsAuthenticated(false);
-            history.replace('/home');
+            history.replace("/home");
         }
     };
 
-
-
-    /* useEffect(() => {
-        getSession()
-            .then((data) => {
-                console.log(data);
-                setIsAuthenticated(true);
-                setIsLoading(false);
-            })
-            .catch((err) => {
-                console.error(err);
-                setIsAuthenticated(false);
-                setIsLoading(false);
-            });
-    }, []); */
     const hasRun = useRef(false);
     useEffect(() => {
-        
         const checkSession = async () => {
             if (hasRun.current) return;
             hasRun.current = true;
@@ -121,6 +127,7 @@ const AccountSettings = (props) => {
                 setIsLoading(false);
             }
         };
+
         checkSession();
     }, []);
 
@@ -128,40 +135,51 @@ const AccountSettings = (props) => {
     const getCookie = (name) => {
         const value = `; ${document.cookie}`;
         const parts = value.split(`; ${name}=`);
-        if (parts.length === 2) return parts.pop().split(';').shift();
+        if (parts.length === 2) return parts.pop().split(";").shift();
         return null;
     };
+
     const bidAuction = (auctionID, bidAmount) => {
         if (!isAuthenticated) {
-            return setGlobalMsg('Please login to bid');
+            return setGlobalMsg("Please login to bid");
         }
 
         let newPrice = Math.floor((bidAmount / 100) * 110);
-        const db = collection(firestoreApp, 'auctions');
+        const db = collection(firestoreApp, "auctions");
         const auctionDoc = doc(db, auctionID);
 
-        return updateDoc(auctionDoc,{
+        return updateDoc(auctionDoc, {
             curPrice: newPrice,
-            curWinner: getCookie('username')
-        })
-    }
+            curWinner: getCookie("username"),
+        });
+    };
 
     const endAuction = (auctionID) => {
-        const db = collection(firestoreApp, 'auctions');
+        const db = collection(firestoreApp, "auctions");
         const auctionDoc = doc(db, auctionID);
 
         return deleteDoc(auctionDoc);
-    }
+    };
 
     useEffect(() => {
-        const interval = setTimeout(() => setGlobalMsg(''), 5000);
+        const interval = setTimeout(() => setGlobalMsg(""), 5000);
         return () => clearInterval(interval);
     }, [globalMsg]);
 
-
     return (
         <div>
-            <AccountSettingsContext.Provider value={{ getSession, authenticate, logout, isAuthenticated, bidAuction, endAuction, globalMsg }}>
+            <AccountSettingsContext.Provider
+                value={{
+                    getSession,
+                    authenticate,
+                    logout,
+                    isAuthenticated,
+                    bidAuction,
+                    endAuction,
+                    globalMsg,
+                    isMod,
+                }}
+            >
                 {!isLoading && props.children}
             </AccountSettingsContext.Provider>
         </div>

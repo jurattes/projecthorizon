@@ -5,7 +5,7 @@ import { AccountSettingsContext } from './settings/AccountSettings';
 import { useLocation } from 'react-router-dom';
 
 function Header() {
-  const { isAuthenticated, logout } = useContext(AccountSettingsContext);
+  const { isAuthenticated, logout, isMod } = useContext(AccountSettingsContext);
   const location = useLocation();
 
 
@@ -46,27 +46,32 @@ function Header() {
           <img src={Logo} alt="Logo" width="250" />
         </a>
         <div className="d-flex ms-auto">
-          <div className="col">
-            {isAuthenticated ? (
-              <>
-                <a className="btn btn-secondary mx-2" href = "/settings">
-                  Settings
-                </a>
-                <div onClick={() => logout()} className="btn btn-danger">
-                  Logout
-                </div>
-              </>
-            ) : (
-              <>
-                <a id = "loginBtn"className="btn btn-primary mx-2" href = '/login'>
-                  Login
-                </a>
-                <a id = "registerBtn" className="btn btn-warning mx-2" href = "/register">
-                  Register
-                </a>
-              </>
-            )}
-          </div>
+        <div className="col">
+                        {isAuthenticated ? (
+                            <>
+                                <a className="btn btn-secondary mx-2" href="/settings">
+                                    Settings
+                                </a>
+                                {isMod && ( // Show this button only if the user is in the 'mod' group
+                                    <a className="btn btn-success mx-2" href="/mod">
+                                        Mod Panel
+                                    </a>
+                                )}
+                                <div onClick={() => logout()} className="btn btn-danger">
+                                    Logout
+                                </div>
+                            </>
+                        ) : (
+                            <>
+                                <a id="loginBtn" className="btn btn-primary mx-2" href="/login">
+                                    Login
+                                </a>
+                                <a id="registerBtn" className="btn btn-warning mx-2" href="/register">
+                                    Register
+                                </a>
+                            </>
+                        )}
+                    </div>
         </div>
       </div>
     </nav>
