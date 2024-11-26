@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { AccountSettingsContext } from '../settings/AccountSettings';
+import { updateDoc, doc } from 'firebase/firestore';
+import { firestoreApp } from '../config/firebase';
 import Countdown from 'react-countdown';
 
 const getCookie = (name) => {
@@ -9,9 +11,7 @@ const getCookie = (name) => {
     return null;
 };
 
-
-
-const renderer = ({days, hours, minutes, seconds, completed, props}) => {
+const renderer = ({ days, hours, minutes, seconds, completed, props }) => {
     if (completed) {
         return null;
     }
@@ -19,43 +19,102 @@ const renderer = ({days, hours, minutes, seconds, completed, props}) => {
     const isOwner = props.isOwner;
 
     return (
-        <div className = "col-md-4">
-            <div className = "card shadow-sm">
+        <div className="col-md-4">
+            <div className="card shadow-sm">
                 <div
-                style = {{
-                    width: '100%',
-                    backgroundImage: `url(${props.item.url})`,
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center',
-                    backgroundRepeat: 'no-repeat',
-                    height: '400px',
-                    aspectRatio: '16/9'}} className = "w-100"/>
+                    style={{
+                        width: '100%',
+                        backgroundImage: `url(${props.item.url})`,
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center',
+                        backgroundRepeat: 'no-repeat',
+                        height: '400px',
+                        aspectRatio: '16/9',
+                    }}
+                    className="w-100"
+                />
 
-                <div className = "card-body"
-                style ={{
-                    width: '100%',
-                    margin: '0 auto',
-                    minHeight: '300px',
-                    padding: '1rem',
-                    fontSize: '1rem'
-                }}>
-                    <p className = "lead display-6">{props.item.title}</p>
-                    <div className = "d-flex justify-content-between align-items-center">
+                <div
+                    className="card-body"
+                    style={{
+                        width: '100%',
+                        margin: '0 auto',
+                        minHeight: '300px',
+                        padding: '1rem',
+                        fontSize: '1rem',
+                    }}
+                >
+                    <p className="lead display-6">{props.item.title}</p>
+                    <div className="d-flex justify-content-center align-items-center mb-3">
                         <h5>
                             {days * 24 + hours} : {minutes} : {seconds}
                         </h5>
                     </div>
-                    <p className = "card-text"> {props.item.desc} </p>
-                    <div className = "d-flex justify-content-between align-items-center">
-                        <div className = "btn-group">
+                    <p className="card-text">{props.item.desc}</p>
+
+                    {/* Tags Section */}
+                    <div className="mb-3">
+                        {props.item.tags?.length > 0 && (
+                            <div>
+                                {props.item.tags.map((tag, index) => (
+                                    <span
+                                        key={index}
+                                        className="badge bg-secondary me-2"
+                                        style={{
+                                            display: 'inline-flex',
+                                            alignItems: 'center',
+                                        }}
+                                    >
+                                        {tag}
+                                        {isOwner && (
+                                            <span
+                                                className="ms-1 text-danger"
+                                                style={{ cursor: 'pointer' }}
+                                                onClick={() =>
+                                                    props.deleteTag(index)
+                                                }
+                                            >
+                                                ×
+                                            </span>
+                                        )}
+                                    </span>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+
+                    <div className="d-flex justify-content-between align-items-center">
+                        <div className="btn-group">
                             {!props.isAuthenticated ? (
-                                <div onClick = {() => props.bidAuction()} className = "btn btn-sm btn-outline-secondary"> Bid </div>
+                                <div
+                                    onClick={() => props.bidAuction()}
+                                    className="btn btn-sm btn-outline-secondary"
+                                >
+                                    Bid
+                                </div>
                             ) : isOwner ? (
-                                <div onClick = {() => props.endAuction(props.item.id)} className = "btn btn-sm btn-outline-secondary"> Cancel </div>
+                                <div
+                                    onClick={() =>
+                                        props.endAuction(props.item.id)
+                                    }
+                                    className="btn btn-sm btn-outline-secondary"
+                                >
+                                    Cancel
+                                </div>
                             ) : props.item.curWinner === getCookie('username') ? (
-                                <p className = "display-6"> - </p>
+                                <p className="display-6"> - </p>
                             ) : (
-                                <div onClick = {() => props.bidAuction(props.item.id, props.item.curPrice)} className = "btn btn-sm btn-outline-secondary"> Bid </div>
+                                <div
+                                    onClick={() =>
+                                        props.bidAuction(
+                                            props.item.id,
+                                            props.item.curPrice
+                                        )
+                                    }
+                                    className="btn btn-sm btn-outline-secondary"
+                                >
+                                    Bid
+                                </div>
                             )}
                         </div>
                         <p className="display-6">${props.item.curPrice}</p>
@@ -63,9 +122,8 @@ const renderer = ({days, hours, minutes, seconds, completed, props}) => {
                 </div>
             </div>
         </div>
-    )
-    
-}
+    );
+};
 
 export const AuctionCard = ({ item }) => {
     const [isOwner, setIsOwner] = useState(false);
@@ -73,11 +131,34 @@ export const AuctionCard = ({ item }) => {
     const { bidAuction, endAuction } = useContext(AccountSettingsContext);
     const { isAuthenticated } = useContext(AccountSettingsContext);
 
+    // Function to handle tag deletion
+    const deleteTag = async (tagIndex) => {
+        try {
+            const updatedTags = [...item.tags];
+            updatedTags.splice(tagIndex, 1); // Remove the selected tag
+            const auctionRef = doc(firestoreApp, 'auctions', item.id);
+            await updateDoc(auctionRef, { tags: updatedTags });
+            item.tags = updatedTags; // Optimistically update UI
+        } catch (error) {
+            console.error('Error deleting tag:', error);
+        }
+    };
+
     useEffect(() => {
         const username = getCookie('username');
         setIsOwner(username === item.username);
     }, [item.username]);
 
-
-    return <Countdown date={expiredDate} item={item} isOwner={isOwner} renderer={renderer} bidAuction={bidAuction} endAuction={endAuction} isAuthenticated={isAuthenticated}/>;
-}
+    return (
+        <Countdown
+            date={expiredDate}
+            item={item}
+            isOwner={isOwner}
+            renderer={renderer}
+            bidAuction={bidAuction}
+            endAuction={endAuction}
+            isAuthenticated={isAuthenticated}
+            deleteTag={deleteTag} // Pass the deleteTag function to the renderer
+        />
+    );
+};

@@ -8,6 +8,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { AccountSettings } from './Components/settings/AccountSettings';
 import { AuthProvider } from './Components/settings/AuthContext';
 import { AuctionBody } from './Components/auctions/body';
+import { SearchAuctions } from './Components/auctions/search';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
         <Route path = "/settings"> <Settings /> </Route>
         <Route path = "/login"> <Login /> </Route>
         <Route path = "/forgotpassword"> <ForgotPassword /> </Route>
+        <Route path = "/search"> <SearchAuctions /> </Route>
       </Switch>
       <AuctionBody />
       </div>

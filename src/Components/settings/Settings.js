@@ -26,7 +26,6 @@ export default () => {
         <div>
             {loggedIn && (
                 <div className = "container">
-                    <h1> Settings</h1>
                     <ChangePassword />
                     <ChangeEmail />
                     <ChangeUser />

@@ -6,6 +6,7 @@ import Registration from '../account/Registration'; // Adjust the path as needed
 import Settings from './Settings'; // Adjust the path as needed
 import Login from '../account/Login'; // Adjust the path as needed
 import ForgotPassword from '../account/ForgotPassword'; // Adjust the path as needed
+import SearchAuctions  from '../auctions/search';
 
 const RoutesWrapper = () => {
   return (
@@ -17,6 +18,7 @@ const RoutesWrapper = () => {
                 <Route path="/settings" component={Settings} />
                 <Route path="/login" component={Login} />
                 <Route path="/forgotpassword" component={ForgotPassword} />
+                <Route path="/search" component={SearchAuctions} />
               </Switch>
         </AuthContext>
       </AccountSettings>
