@@ -4,6 +4,7 @@ import { AccountSettingsContext } from "../settings/AccountSettings";
 import { firestoreApp } from "../config/firebase";
 import { collection, getDocs, deleteDoc, doc, updateDoc } from "firebase/firestore";
 import { Button, Table, Modal, Form } from "react-bootstrap";
+import { FaStar, FaRegStar } from "react-icons/fa"; // Import star icons
 
 const ModeratorPanel = () => {
     const { getSession, isAuthenticated } = useContext(AccountSettingsContext);
@@ -92,6 +93,7 @@ const ModeratorPanel = () => {
                 desc: selectedAuction.desc,
                 curPrice: selectedAuction.curPrice,
                 tags: selectedAuction.tags || [],  // Ensure tags is always an array
+                featured: selectedAuction.featured || false // Update featured status
             });
             fetchAuctions(); // Re-fetch auctions after updating
             setGlobalMsg({ text: "Auction updated successfully.", type: "success" });
@@ -121,6 +123,19 @@ const ModeratorPanel = () => {
         } catch (error) {
             console.error("Error deleting tag:", error);
             setGlobalMsg({ text: "Error deleting tag.", type: "error" });
+        }
+    };
+
+    const toggleFeatureAuction = async () => {
+        try {
+            const updatedFeaturedStatus = !selectedAuction.featured;
+            const auctionRef = doc(firestoreApp, "auctions", selectedAuction.id);
+            await updateDoc(auctionRef, { featured: updatedFeaturedStatus });
+            setSelectedAuction({ ...selectedAuction, featured: updatedFeaturedStatus });
+            setGlobalMsg({ text: updatedFeaturedStatus ? "Auction featured!" : "Auction unfeatured!", type: "success" });
+        } catch (error) {
+            console.error("Error updating featured status:", error);
+            setGlobalMsg({ text: "Error updating featured status.", type: "error" });
         }
     };
 
@@ -271,6 +286,18 @@ const ModeratorPanel = () => {
                                         Add Tag
                                     </Button>
                                 </div>
+                            </Form.Group>
+
+                            {/* Featured Star Toggle */}
+                            <Form.Group controlId="formAuctionFeatured" className="mt-3">
+                                <Form.Label>Featured</Form.Label>
+                                <Button
+                                    variant="link"
+                                    onClick={toggleFeatureAuction}
+                                    className="fs-2 text-warning"
+                                >
+                                    {selectedAuction.featured ? <FaStar /> : <FaRegStar />}
+                                </Button>
                             </Form.Group>
                         </Form>
                     </Modal.Body>

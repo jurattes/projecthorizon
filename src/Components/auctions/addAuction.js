@@ -74,6 +74,7 @@ export const AddAuction = ({ setAuction }) => {
             duration: dueDate,
             itemImage: itemImage.current.files[0],
             tags, // Include tags in the auction object
+            featured: false 
         };
 
         setAuction(newAuction);

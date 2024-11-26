@@ -44,8 +44,14 @@ const renderer = ({ days, hours, minutes, seconds, completed, props }) => {
                         fontSize: '1rem',
                     }}
                 >
-                    <p className="lead display-6">{props.item.title}</p>
-                    <div className="d-flex justify-content-center align-items-center mb-3">
+                    <div className="d-flex justify-content-between">
+                        <p className="lead display-6">{props.item.title}</p>
+                        {props.item.featured && (
+                            <span className="text-warning" style={{ fontSize: '1.5rem' }}>★</span> // Star indicator for featured auctions
+                        )}
+                    </div>
+
+                    <div className="d-flex justify-content-center align-items-center">
                         <h5>
                             {days * 24 + hours} : {minutes} : {seconds}
                         </h5>
@@ -131,7 +137,7 @@ export const AuctionCard = ({ item }) => {
     const { bidAuction, endAuction } = useContext(AccountSettingsContext);
     const { isAuthenticated } = useContext(AccountSettingsContext);
 
-    // Function to handle tag deletion
+    // Define the deleteTag function to handle tag removal
     const deleteTag = async (tagIndex) => {
         try {
             const updatedTags = [...item.tags];
@@ -158,7 +164,7 @@ export const AuctionCard = ({ item }) => {
             bidAuction={bidAuction}
             endAuction={endAuction}
             isAuthenticated={isAuthenticated}
-            deleteTag={deleteTag} // Pass the deleteTag function to the renderer
+            deleteTag={deleteTag} // Pass deleteTag function to renderer
         />
     );
 };

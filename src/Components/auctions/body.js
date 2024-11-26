@@ -9,7 +9,7 @@ import { useLocation } from 'react-router-dom';
 
 export const AuctionBody = () => {
     const { isAuthenticated, globalMsg } = useContext(AccountSettingsContext);
-    const [ auction, setAuction ] = useState(null);
+    const [auction, setAuction] = useState(null);
     const { docs } = useFirestore('auctions');
     const location = useLocation();
 
@@ -17,26 +17,41 @@ export const AuctionBody = () => {
         return null;
     }
 
+    // Separate featured auctions and non-featured auctions
+    const featuredAuctions = docs?.filter(doc => doc.featured === true);
+    const nonFeaturedAuctions = docs?.filter(doc => doc.featured !== true);
+
     return (
-        <div className = "py-5">
-            <div className = "container">
+        <div className="py-5">
+            <div className="container">
                 {auction && <Progression auction={auction} setAuction={setAuction} />}
-                {globalMsg && <Alert variant = "info">{globalMsg}</Alert>}
-                {isAuthenticated && <AddAuction setAuction={setAuction}/>}
-                {docs && (
-                    <div className = "row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4"
-                    style = {{
-                        width: '200%',
-                        margin: '0 auto'
-                    }}>
-                        {docs.map((doc) => {
-                            return (
+                {globalMsg && <Alert variant="info">{globalMsg}</Alert>}
+                {isAuthenticated && <AddAuction setAuction={setAuction} />}
+
+                {/* Featured Auctions Section */}
+                {featuredAuctions.length > 0 && (
+                    <div className="mb-5">
+                        <h3>Featured Auctions</h3>
+                        <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
+                            {featuredAuctions.map((doc) => (
                                 <AuctionCard item={doc} key={doc.id} />
-                            )
-                        })}
+                            ))}
+                        </div>
+                    </div>
+                )}
+
+                {/* Non-Featured Auctions Section */}
+                {nonFeaturedAuctions.length > 0 && (
+                    <div>
+                        <h3>Other Auctions</h3>
+                        <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
+                            {nonFeaturedAuctions.map((doc) => (
+                                <AuctionCard item={doc} key={doc.id} />
+                            ))}
+                        </div>
                     </div>
                 )}
             </div>
         </div>
     );
-}
+};
