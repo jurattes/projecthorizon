@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { Alert } from 'react-bootstrap';
 import { AccountSettingsContext } from '../settings/AccountSettings';
 import { AddAuction } from './addAuction';
@@ -8,7 +8,7 @@ import { AuctionCard } from './Card';
 import { useLocation } from 'react-router-dom';
 
 export const AuctionBody = () => {
-    const { isAuthenticated, globalMsg } = useContext(AccountSettingsContext);
+    const { isAuthenticated, globalMsg, isRestricted } = useContext(AccountSettingsContext); // Access isRestricted
     const [auction, setAuction] = useState(null);
     const { docs } = useFirestore('auctions');
     const location = useLocation();
@@ -26,7 +26,12 @@ export const AuctionBody = () => {
             <div className="container">
                 {auction && <Progression auction={auction} setAuction={setAuction} />}
                 {globalMsg && <Alert variant="info">{globalMsg}</Alert>}
-                {isAuthenticated && <AddAuction setAuction={setAuction} />}
+                
+                {/* Conditionally render AddAuction button for restricted users */}
+                {isAuthenticated && !isRestricted && <AddAuction setAuction={setAuction} />}
+                {isRestricted && (
+                    <Alert variant="warning">Your account is restricted.</Alert>
+                )}
 
                 {/* Featured Auctions Section */}
                 {featuredAuctions.length > 0 && (

@@ -11,6 +11,7 @@ const AccountSettings = (props) => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const [isMod, setIsMod] = useState(false);
+    const [isRestricted, setIsRestricted] = useState(false);
     const history = useHistory(); // For redirection
     const [globalMsg, setGlobalMsg] = useState("");
 
@@ -32,6 +33,7 @@ const AccountSettings = (props) => {
                             // Check if user is in mod group
                             const groups = payload['cognito:groups'] || [];
                             setIsMod(groups.includes('mod'));
+                            setIsRestricted(groups.includes('restricted'));
 
                             resolve({
                                 user,
@@ -50,6 +52,7 @@ const AccountSettings = (props) => {
             } else {
                 console.warn("No current user session was found.");
                 setIsMod(false);
+                setIsRestricted(false);
                 // Clear cookies and storage if no session
                 document.cookie = "username=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
                 localStorage.removeItem("userData");
@@ -58,8 +61,6 @@ const AccountSettings = (props) => {
             }
         });
     };
-
-    
 
     const authenticate = async (Username, Password) => {
         return await new Promise((resolve, reject) => {
@@ -82,9 +83,15 @@ const AccountSettings = (props) => {
     
                         setIsMod(isUserMod); // Update isMod state
                         console.log(`User mod status (in authenticate): ${isUserMod}`);
+
+                        // Check if the user is in the 'restricted' group
+                        const isUserRestricted = groups.includes("restricted");
+                        setIsRestricted(isUserRestricted);
+                        console.log(`User restricted status: ${isUserRestricted}`);
                     } catch (err) {
                         console.error("Error decoding ID token or setting mod status:", err);
                         setIsMod(false); // Reset to false if something goes wrong
+                        setIsRestricted(false);
                     }
                 },
                 onFailure: (err) => {
@@ -106,6 +113,7 @@ const AccountSettings = (props) => {
         if (user) {
             user.signOut();
             setIsAuthenticated(false);
+            setIsRestricted(false);
             history.replace("/home");
         }
     };
@@ -144,13 +152,28 @@ const AccountSettings = (props) => {
             return setGlobalMsg("Please login to bid");
         }
 
-        let newPrice = Math.floor((bidAmount / 100) * 110);
+        if (isRestricted) {
+            return setGlobalMsg("Your account has been restricted. You are not allowed to bid or create auctions.");
+        }
+
+        // Calculate the new bid price (add 10% to the bid amount)
+        const newPrice = Math.floor(bidAmount * 1.10); // Use direct multiplication for clarity
+
+        // Get the auction document reference
         const db = collection(firestoreApp, "auctions");
         const auctionDoc = doc(db, auctionID);
 
+        // Update the auction document with the new price and winner
         return updateDoc(auctionDoc, {
             curPrice: newPrice,
-            curWinner: getCookie("username"),
+            curWinner: getCookie("username"), // Assuming the username is stored in cookies
+        })
+        .then(() => {
+            setGlobalMsg("Bid placed successfully!");
+        })
+        .catch((error) => {
+            console.error("Error placing bid: ", error);
+            setGlobalMsg("Failed to place the bid.");
         });
     };
 
@@ -160,6 +183,7 @@ const AccountSettings = (props) => {
 
         return deleteDoc(auctionDoc);
     };
+
 
     useEffect(() => {
         const interval = setTimeout(() => setGlobalMsg(""), 5000);
@@ -178,6 +202,7 @@ const AccountSettings = (props) => {
                     endAuction,
                     globalMsg,
                     isMod,
+                    isRestricted
                 }}
             >
                 {!isLoading && props.children}
