@@ -19,7 +19,7 @@ export const Progression = ({ auction, setAuction }) => {
     };
     return (
         <motion.div
-            style={{ height: '5px', background: 'black' }}
+            style={{ height: '10px', background: 'black' }}
             variants={progressVariants}
             initial="initial"
             animate="animate"

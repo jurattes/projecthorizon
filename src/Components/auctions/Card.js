@@ -28,15 +28,16 @@ const renderer = ({days, hours, minutes, seconds, completed, props}) => {
                     backgroundSize: 'cover',
                     backgroundPosition: 'center',
                     backgroundRepeat: 'no-repeat',
-                    height: '400px'}} className = "w-100"/>
+                    height: '400px',
+                    aspectRatio: '16/9'}} className = "w-100"/>
 
                 <div className = "card-body"
                 style ={{
                     width: '100%',
                     margin: '0 auto',
                     minHeight: '300px',
-                    padding: '2rem',
-                    fontSize: '1.2rem'
+                    padding: '1rem',
+                    fontSize: '1rem'
                 }}>
                     <p className = "lead display-6">{props.item.title}</p>
                     <div className = "d-flex justify-content-between align-items-center">
@@ -51,7 +52,7 @@ const renderer = ({days, hours, minutes, seconds, completed, props}) => {
                                 <div onClick = {() => props.bidAuction()} className = "btn btn-sm btn-outline-secondary"> Bid </div>
                             ) : isOwner ? (
                                 <div onClick = {() => props.endAuction(props.item.id)} className = "btn btn-sm btn-outline-secondary"> Cancel </div>
-                            ) : props.item.username === getCookie('username') ? (
+                            ) : props.item.curWinner === getCookie('username') ? (
                                 <p className = "display-6"> - </p>
                             ) : (
                                 <div onClick = {() => props.bidAuction(props.item.id, props.item.curPrice)} className = "btn btn-sm btn-outline-secondary"> Bid </div>

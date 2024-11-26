@@ -24,7 +24,11 @@ export const AuctionBody = () => {
                 {globalMsg && <Alert variant = "info">{globalMsg}</Alert>}
                 {isAuthenticated && <AddAuction setAuction={setAuction}/>}
                 {docs && (
-                    <div className = "row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+                    <div className = "row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4"
+                    style = {{
+                        width: '200%',
+                        margin: '0 auto'
+                    }}>
                         {docs.map((doc) => {
                             return (
                                 <AuctionCard item={doc} key={doc.id} />

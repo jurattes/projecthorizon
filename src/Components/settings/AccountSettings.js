@@ -1,4 +1,4 @@
-import React, { useState, createContext, useEffect } from 'react';
+import React, { useState, createContext, useEffect, useRef } from 'react';
 import { CognitoUser, AuthenticationDetails } from 'amazon-cognito-identity-js';
 import { firestoreApp } from '../config/firebase';
 import Pool from './UserPool.js';
@@ -103,9 +103,13 @@ const AccountSettings = (props) => {
                 setIsLoading(false);
             });
     }, []); */
-
+    const hasRun = useRef(false);
     useEffect(() => {
+        
         const checkSession = async () => {
+            if (hasRun.current) return;
+            hasRun.current = true;
+
             try {
                 const data = await getSession();
                 console.log("Session data:", data);
