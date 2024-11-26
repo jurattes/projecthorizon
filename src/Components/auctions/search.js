@@ -60,16 +60,20 @@ export const SearchAuctions = () => {
                                     fontSize: '1rem',
                                 }}
                             >
-                                <p className="lead display-6">{item.title}</p>
+                                <div className="d-flex justify-content-between">
+                                    <p className="lead display-6">{item.title}</p>
+                                    {item.featured && (
+                                        <span className="text-warning" style={{ fontSize: '1.5rem' }}>
+                                            ★
+                                        </span> // Star icon for featured auctions
+                                    )}
+                                </div>
                                 <p className="card-text">{item.desc}</p>
                                 <div className="d-flex justify-content-between align-items-center">
                                     <div>
                                         {item.tags &&
                                             item.tags.map((tag, index) => (
-                                                <span
-                                                    key={index}
-                                                    className="badge bg-primary me-2"
-                                                >
+                                                <span key={index} className="badge bg-primary me-2">
                                                     {tag}
                                                 </span>
                                             ))}
