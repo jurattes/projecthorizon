@@ -164,10 +164,8 @@ const ModeratorPanel = () => {
                     <button type="button" className="btn-close" onClick={closeGlobalMsg}></button>
                 </div>
             )}
-
-            <h1 className="text-center">Moderator Panel</h1>
             <div className="card mt-4">
-                <div className="card-header">Admin Actions</div>
+                <div className="card-header">Moderator Actions</div>
                 <div className="card-body">
                     <Button
                         variant="primary"

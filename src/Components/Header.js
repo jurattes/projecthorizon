@@ -47,14 +47,21 @@ function Header() {
           {/* Authenticated User Options */}
           {isAuthenticated ? (
             <>
-              <a className="btn btn-secondary mx-2" href="/settings">
-                Settings
-              </a>
-              {isMod && (
+              {/* Show Settings button only if the user is not on the /settings page */}
+              {location.pathname !== '/settings' && (
+                <a className="btn btn-secondary mx-2" href="/settings">
+                  Settings
+                </a>
+              )}
+
+              {/* Show Mod Panel button only if the user is a mod and not on the /mod page */}
+              {isMod && location.pathname !== '/mod' && (
                 <a className="btn btn-success mx-2" href="/mod">
                   Mod Panel
                 </a>
               )}
+
+              {/* Logout button */}
               <div
                 onClick={() => logout()}
                 className="btn btn-danger"
