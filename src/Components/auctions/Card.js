@@ -20,34 +20,33 @@ const renderer = ({ days, hours, minutes, seconds, completed, props }) => {
 
     return (
         <div className="col-md-4">
-            <div className="card shadow-sm">
+            <div className="card shadow-sm h-100">
                 <div
                     style={{
-                        width: '100%',
                         backgroundImage: `url(${props.item.url})`,
                         backgroundSize: 'cover',
                         backgroundPosition: 'center',
                         backgroundRepeat: 'no-repeat',
-                        height: '400px',
                         aspectRatio: '16/9',
+                        height: '200px'
                     }}
-                    className="w-100"
+                    className="card-img-top"
                 />
 
                 <div
                     className="card-body"
                     style={{
-                        width: '100%',
                         margin: '0 auto',
                         minHeight: '300px',
                         padding: '1rem',
                         fontSize: '1rem',
                     }}
                 >
-                    <div className="d-flex justify-content-between">
-                        <p className="lead display-6">{props.item.title}</p>
+                    <div className="d-flex justify-content-between align-items-center mb-3"
+                    style={{ textAlign: 'center'}}>
+                        <p className="lead display-6 mb-0">{props.item.title}</p>
                         {props.item.featured && (
-                            <span className="text-warning" style={{ fontSize: '1.5rem' }}>★</span> // Star indicator for featured auctions
+                            <span className="text-warning ms-2" style={{ fontSize: '1.5rem' }}>★</span> // Star indicator for featured auctions
                         )}
                     </div>
 
@@ -123,7 +122,7 @@ const renderer = ({ days, hours, minutes, seconds, completed, props }) => {
                                 </div>
                             )}
                         </div>
-                        <p className="display-6">${props.item.curPrice}</p>
+                        <p className="display-6">{props.item.curPrice}$</p>
                     </div>
                 </div>
             </div>
