@@ -1,77 +1,82 @@
 import './css/Header.css';
-import React, { useEffect, useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import Logo from './assets/logo1.png';
 import { AccountSettingsContext } from './settings/AccountSettings';
 import { useLocation } from 'react-router-dom';
+import 'bootstrap-icons/font/bootstrap-icons.css';
 
 function Header() {
   const { isAuthenticated, logout, isMod } = useContext(AccountSettingsContext);
   const location = useLocation();
 
-
-    if (location.pathname === '/login' || location.pathname === '/register' || location.pathname === '/forgotpassword') {
-        return null;
-    }
-
-    if (location.pathname === '/settings') {
-        return (
-          <nav className="navbar navbar-expand-lg sticky-top navbar-light transparent-navbar">
-      <div className="container-fluid">
-        <a className="navbar-brand" href = "/home">
-          <img src={Logo} alt="Logo" width="250" />
-        </a>
-        <div className="d-flex ms-auto">
-          <div className="col">
-            {isAuthenticated ? (
-              <>
-                <div onClick={() => logout()} className="btn btn-danger">
-                  Logout
-                </div>
-              </>
-            ) : (
-              <>
-              </>
-            )}
-          </div>
-        </div>
-      </div>
-    </nav>
-        ); 
-    }
+  // Hide the navbar for specific routes
+  if (
+    location.pathname === '/login' ||
+    location.pathname === '/register' ||
+    location.pathname === '/forgotpassword'
+  ) {
+    return null;
+  }
 
   return (
     <nav className="navbar navbar-expand-lg sticky-top navbar-light transparent-navbar">
       <div className="container-fluid">
-        <a className="navbar-brand" href = "/home">
+        {/* Logo */}
+        <a className="navbar-brand" href="/home">
           <img src={Logo} alt="Logo" width="250" />
         </a>
-        <div className="d-flex ms-auto">
-        <div className="col">
-                        {isAuthenticated ? (
-                            <>
-                                <a className="btn btn-secondary mx-2" href="/settings">
-                                    Settings
-                                </a>
-                                {isMod && ( // Show this button only if the user is in the 'mod' group
-                                    <a className="btn btn-success mx-2" href="/mod">
-                                        Mod Panel
-                                    </a>
-                                )}
-                                <div onClick={() => logout()} className="btn btn-danger">
-                                    Logout
-                                </div>
-                            </>
-                        ) : (
-                            <>
-                                <a id="loginBtn" className="btn btn-primary mx-2" href="/login">
-                                    Login
-                                </a>
-                                <a id="registerBtn" className="btn btn-warning mx-2" href="/register">
-                                    Register
-                                </a>
-                            </>
-                        )}
-                    </div>
+
+        {/* Right-side buttons */}
+        <div className="d-flex ms-auto align-items-center">
+          {/* Search Icon */}
+          <a
+            className="btn btn-light me-3 d-flex align-items-center justify-content-center"
+            href="/search"
+            style={{
+              width: '40px',
+              height: '40px',
+              borderRadius: '50%',
+              padding: '0',
+              boxShadow: '0 2px 5px rgba(0,0,0,0.1)',
+            }}
+            title="Search"
+          >
+            <i className="bi bi-search" style={{ fontSize: '1.5rem' }}></i>
+          </a>
+
+          {/* Authenticated User Options */}
+          {isAuthenticated ? (
+            <>
+              <a className="btn btn-secondary mx-2" href="/settings">
+                Settings
+              </a>
+              {isMod && (
+                <a className="btn btn-success mx-2" href="/mod">
+                  Mod Panel
+                </a>
+              )}
+              <div
+                onClick={() => logout()}
+                className="btn btn-danger"
+                style={{ cursor: 'pointer' }}
+              >
+                Logout
+              </div>
+            </>
+          ) : (
+            <>
+              <a id="loginBtn" className="btn btn-primary mx-2" href="/login">
+                Login
+              </a>
+              <a
+                id="registerBtn"
+                className="btn btn-warning mx-2"
+                href="/register"
+              >
+                Register
+              </a>
+            </>
+          )}
         </div>
       </div>
     </nav>
